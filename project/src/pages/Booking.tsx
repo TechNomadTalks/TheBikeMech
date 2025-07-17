@@ -46,11 +46,49 @@ const Booking: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Updated handleSubmit to send data to Formspree
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    alert('Booking request submitted! We\'ll be in touch soon to confirm your appointment.');
-    console.log('Booking data:', formData);
+
+    try {
+      const response = await fetch('https://formspree.io/f/xanbnedk', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          service: formData.service,
+          date: formData.date,
+          time: formData.time,
+          bikeType: formData.bikeType,
+          message: formData.message,
+          _subject: `New Booking from ${formData.name}`,
+        }),
+      });
+
+      if (response.ok) {
+        alert("Booking request submitted! We'll be in touch soon.");
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          service: '',
+          date: '',
+          time: '',
+          bikeType: '',
+          message: '',
+        });
+      } else {
+        alert("Oops! Something went wrong. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("There was an error submitting the form. Please try again later.");
+    }
   };
 
   const copyToClipboard = async (text: string, field: string) => {
@@ -70,7 +108,7 @@ Account: ${bankingDetails.accountName}
 Number: ${bankingDetails.accountNumber}
 Branch: ${bankingDetails.branchCode}
 Reference: ${bankingDetails.reference}`;
-    
+
     return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
   };
 
