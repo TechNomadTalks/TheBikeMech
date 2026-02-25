@@ -342,7 +342,7 @@ export default function HomePage() {
 
             <motion.div
               variants={fadeInUp}
-              className="mt-12 flex items-center justify-center gap-8 text-sm text-zinc-500"
+              className="mt-12 flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm text-zinc-500 px-4"
             >
               <div className="flex items-center gap-2">
                 <Shield className="w-5 h-5 text-[#22c55e]" />
@@ -512,14 +512,19 @@ export default function HomePage() {
                 <h3 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-4">Services</h3>
                 <div className="space-y-3">
                   {[
-                    { label: 'Repairs', color: 'bg-[#22c55e]' },
-                    { label: 'Service', color: 'bg-[#ec4899]' },
-                    { label: 'Events', color: 'bg-[#3b82f6]' },
-                    { label: 'Custom Builds', color: 'bg-[#f97316]' },
+                    { label: 'Repairs', percent: '45%', color: 'bg-[#22c55e]' },
+                    { label: 'Service', percent: '30%', color: 'bg-[#ec4899]' },
+                    { label: 'Events', percent: '15%', color: 'bg-[#3b82f6]' },
+                    { label: 'Custom Builds', percent: '10%', color: 'bg-[#f97316]' },
                   ].map((item) => (
                     <div key={item.label} className="relative">
-                      <span className="text-zinc-300 text-sm">{item.label}</span>
-                      <div className={`absolute bottom-0 left-0 h-0.5 ${item.color} w-full`} />
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-zinc-300 text-sm">{item.label}</span>
+                        <span className="text-[#22c55e] text-xs font-bold">{item.percent}</span>
+                      </div>
+                      <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                        <div className={`h-full ${item.color} rounded-full`} style={{ width: item.percent }} />
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -645,9 +650,9 @@ export default function HomePage() {
           </motion.div>
 
           <div className="max-w-5xl mx-auto">
-            <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible pb-2 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
               {visibleTestimonials().map((testimonial, idx) => (
-                <Card key={`${testimonial.id}-${idx}`} className="glass-card p-4 md:p-6 flex-shrink-0 w-[85vw] md:w-auto">
+                <Card key={`${testimonial.id}-${idx}`} className="glass-card p-4 md:p-6">
                   <div className="flex gap-1 mb-2 md:mb-3">
                     {[...Array(testimonial.rating)].map((_, i) => (
                       <Star key={i} className="w-3 h-4 md:w-4 fill-[#22c55e] text-[#22c55e]" />
