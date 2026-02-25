@@ -462,6 +462,69 @@ export default function HomePage() {
                 </div>
               </Card>
             </motion.div>
+
+            {/* Service Expertise - Pie Chart */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="col-span-1"
+            >
+              <Card className="glass-card p-3 md:p-6">
+                <h3 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-4">Services</h3>
+                {/* Simple Pie Chart */}
+                <div className="flex items-center gap-4">
+                  <svg viewBox="0 0 100 100" className="w-24 h-24 md:w-32 md:h-32">
+                    {/* Repairs 45% - Green */}
+                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#22c55e" strokeWidth="20" strokeDasharray="125.6 251.2" strokeDashoffset="0" transform="rotate(-90 50 50)"/>
+                    {/* Service 30% - Pink - starts at 45% */}
+                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#ec4899" strokeWidth="20" strokeDasharray="83.7 251.2" strokeDashoffset="-125.6" transform="rotate(-90 50 50)"/>
+                    {/* Events 15% - Blue - starts at 75% */}
+                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#3b82f6" strokeWidth="20" strokeDasharray="41.9 251.2" strokeDashoffset="-209.3" transform="rotate(-90 50 50)"/>
+                    {/* Custom 10% - Orange - starts at 90% */}
+                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#f97316" strokeWidth="20" strokeDasharray="27.9 251.2" strokeDashoffset="-251.2" transform="rotate(-90 50 50)"/>
+                  </svg>
+                  <div className="flex-1 space-y-1 text-xs">
+                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-[#22c55e]"></span>Repairs 45%</div>
+                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-[#ec4899]"></span>Service 30%</div>
+                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-[#3b82f6]"></span>Events 15%</div>
+                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-[#f97316]"></span>Custom 10%</div>
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+
+            {/* Service Breakdown */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="col-span-1"
+            >
+              <Card className="glass-card p-3 md:p-6">
+                <h3 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-4">Services</h3>
+                <div className="space-y-3">
+                  {[
+                    { label: 'Repairs', percent: '45%', color: 'bg-[#22c55e]' },
+                    { label: 'Service', percent: '30%', color: 'bg-[#ec4899]' },
+                    { label: 'Events', percent: '15%', color: 'bg-[#3b82f6]' },
+                    { label: 'Custom Builds', percent: '10%', color: 'bg-[#f97316]' },
+                  ].map((item) => (
+                    <div key={item.label} className="relative">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-zinc-300 text-sm">{item.label}</span>
+                        <span className="text-[#22c55e] text-xs font-bold">{item.percent}</span>
+                      </div>
+                      <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                        <div className={`h-full ${item.color} rounded-full`} style={{ width: item.percent }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </motion.div>
           </div>
 
           {/* Hexagon Stats */}
