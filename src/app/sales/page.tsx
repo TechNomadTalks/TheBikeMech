@@ -150,7 +150,7 @@ export default function SalesPage() {
               </p>
             </div>
             <a
-              href="https://facebook.com/marketplace"
+              href={process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://facebook.com/marketplace"}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-shrink-0"
@@ -162,15 +162,26 @@ export default function SalesPage() {
             </a>
           </div>
           
-          {/* Facebook Embed Placeholder */}
-          <div className="mt-6 p-8 border border-dashed border-zinc-700 rounded-xl text-center bg-zinc-900/50">
-            <Facebook className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
-            <p className="text-zinc-400 mb-2">Facebook Marketplace Embed</p>
-            <p className="text-zinc-500 text-sm">
-              This area will display live listings from your Facebook Marketplace. 
-              <br />
-              Add your Facebook Marketplace URL to enable embedding.
-            </p>
+          {/* Facebook Page Plugin Embed */}
+          <div className="mt-6">
+            <div 
+              className="fb-page" 
+              data-href={process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://www.facebook.com/TheBikeMechSA"}
+              data-tabs="marketplace" 
+              data-width="" 
+              data-height="500"
+              data-small-header="false" 
+              data-adapt-container-width="true" 
+              data-hide-cover="false" 
+              data-show-facepile="true"
+            >
+              <blockquote 
+                cite={process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://www.facebook.com/TheBikeMechSA"} 
+                className="fb-xfbml-parse-ignore"
+              >
+                <a href={process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://www.facebook.com/TheBikeMechSA"}>The Bike Mech</a>
+              </blockquote>
+            </div>
           </div>
         </motion.div>
 

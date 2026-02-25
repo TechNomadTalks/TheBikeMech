@@ -7,6 +7,7 @@ import { Footer } from "@/components/shared/footer";
 import { WhatsAppButton } from "@/components/shared/whatsapp-button";
 import { BackToTopButton } from "@/components/shared/back-to-top";
 import { GradientOrbs } from "@/components/shared/gradient-orbs";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -59,6 +60,7 @@ export default function RootLayout({
         <BackToTopButton />
         <WhatsAppButton />
         <Toaster />
+        <Script async defer src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0" crossOrigin="anonymous" />
       </body>
     </html>
   );
