@@ -61,9 +61,9 @@ export function EventsCalendar() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       {/* Events Grid with Images */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
         {upcomingEvents.map((event, index) => (
           <motion.div
             key={event.id}
@@ -76,17 +76,17 @@ export function EventsCalendar() {
               onClick={() => setSelectedEvent(event)}
             >
               {/* Image Placeholder */}
-              <div className="aspect-video bg-gradient-to-br from-[#22c55e]/20 to-[#06b6d4]/20 relative flex items-center justify-center">
-                <div className="text-4xl opacity-30">🚴</div>
+              <div className="aspect-video md:aspect-video bg-gradient-to-br from-[#22c55e]/20 to-[#06b6d4]/20 relative flex items-center justify-center">
+                <div className="text-2xl md:text-4xl opacity-30">🚴</div>
                 <Badge 
                   variant={event.type === "race" ? "default" : "secondary"}
-                  className="absolute top-3 left-3"
+                  className="absolute top-2 left-2 text-[10px] md:text-xs"
                 >
                   {event.type === "race" ? "🏁 Race" : "🚴 Ride"}
                 </Badge>
               </div>
               
-              <div className="p-4">
+              <div className="p-2 md:p-4">
                 <div className="flex items-center gap-2 text-xs text-zinc-400 mb-2">
                   <Calendar className="w-3 h-3" />
                   {formatDate(event.date)}
@@ -116,42 +116,42 @@ export function EventsCalendar() {
       </div>
 
       {/* Calendar */}
-      <Card className="glass-card p-4 md:p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white">
+      <Card className="glass-card p-2 md:p-6">
+        <div className="flex items-center justify-between mb-2 md:mb-4">
+          <h3 className="text-sm md:text-lg font-semibold text-white">
             {months[month]} {year}
           </h3>
-          <div className="flex gap-2">
+          <div className="flex gap-1 md:gap-2">
             <Button 
               variant="outline" 
               size="icon" 
               onClick={prevMonth}
-              className="h-8 w-8 border-white/20 text-white hover:bg-white/10"
+              className="h-6 w-6 md:h-8 md:w-8 border-white/20 text-white hover:bg-white/10"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3 h-3 md:w-4 md:h-4" />
             </Button>
             <Button 
               variant="outline" 
               size="icon" 
               onClick={nextMonth}
-              className="h-8 w-8 border-white/20 text-white hover:bg-white/10"
+              className="h-6 w-6 md:h-8 md:w-8 border-white/20 text-white hover:bg-white/10"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
             </Button>
           </div>
         </div>
 
         {/* Day Headers */}
-        <div className="grid grid-cols-7 gap-1 mb-2">
+        <div className="grid grid-cols-7 gap-0 md:gap-1 mb-1 md:mb-2">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(day => (
-            <div key={day} className="text-center text-xs text-zinc-500 font-medium py-2">
+            <div key={day} className="text-[10px] md:text-xs text-zinc-500 font-medium py-0 md:py-2 text-center">
               {day}
             </div>
           ))}
         </div>
 
         {/* Calendar Days */}
-        <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-0 md:gap-1">
           {Array.from({ length: firstDayOfMonth }).map((_, i) => (
             <div key={`empty-${i}`} className="aspect-square" />
           ))}

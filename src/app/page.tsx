@@ -270,18 +270,26 @@ export default function HomePage() {
     return () => observer.disconnect();
   }, []);
 
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
+
+  const step = isDesktop ? 3 : 1;
+
   const nextTestimonial = () => {
-    const step = typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1;
     setCurrentTestimonial((prev) => (prev + step) % testimonials.length);
   };
 
   const prevTestimonial = () => {
-    const step = typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1;
     setCurrentTestimonial((prev) => (prev - step + testimonials.length) % testimonials.length);
   };
 
   const visibleTestimonials = () => {
-    const step = typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1;
     const result = [];
     for (let i = 0; i < step; i++) {
       const index = (currentTestimonial + i) % testimonials.length;
@@ -290,8 +298,8 @@ export default function HomePage() {
     return result;
   };
 
-  const totalDots = Math.ceil(testimonials.length / (typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1));
-  const currentDot = Math.floor(currentTestimonial / (typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1));
+  const totalDots = Math.ceil(testimonials.length / step);
+  const currentDot = Math.floor(currentTestimonial / step);
 
   return (
     <div className="relative">
@@ -689,7 +697,7 @@ export default function HomePage() {
               {Array.from({ length: totalDots }).map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => setCurrentTestimonial(index * (typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1))}
+                  onClick={() => setCurrentTestimonial(index * step)}
                   className={`w-2 h-2 rounded-full transition-all ${
                     index === currentDot
                       ? "bg-[#22c55e] w-6"

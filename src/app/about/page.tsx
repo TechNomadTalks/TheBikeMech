@@ -179,7 +179,7 @@ export default function AboutPage() {
           className="mb-16"
         >
           <h2 className="text-2xl font-bold text-white mb-8 text-center">Meet the Team</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className={`grid grid-cols-1 ${team.length === 1 ? 'md:justify-center md:grid-cols-1' : 'md:grid-cols-3'} gap-6`}>
             {team.map((member, index) => (
               <Card key={index} className="glass-card glass-card-hover p-6">
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#22c55e] to-[#06b6d4] flex items-center justify-center mx-auto mb-4 text-black text-2xl font-bold">
