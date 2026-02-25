@@ -176,8 +176,8 @@ export function SearchDropdown({ className = "", onClose }: SearchDropdownProps)
     onClose?.();
   };
 
-  const getIcon = (type: string) => {
-    switch (type) {
+  const getIcon = (result: SearchResult) => {
+    switch (result.type) {
       case "service": return <Wrench className="w-4 h-4" />;
       case "bike": return <Bike className="w-4 h-4" />;
       case "blog": return <FileText className="w-4 h-4" />;
@@ -284,7 +284,7 @@ export function SearchDropdown({ className = "", onClose }: SearchDropdownProps)
                 className="w-full flex items-start gap-3 p-3 hover:bg-white/5 transition-colors text-left border-b border-white/5 last:border-b-0"
               >
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${getColor(result.type)}`}>
-                  {getIcon(result.type)}
+                  {getIcon(result)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <span className={`text-xs px-1.5 py-0.5 rounded ${getColor(result.type)}`}>{getLabel(result.type)}</span>
