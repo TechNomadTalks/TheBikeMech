@@ -271,43 +271,49 @@ export default function HomePage() {
   }, []);
 
   const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    const step = typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1;
+    setCurrentTestimonial((prev) => (prev + step) % testimonials.length);
   };
 
   const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    const step = typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1;
+    setCurrentTestimonial((prev) => (prev - step + testimonials.length) % testimonials.length);
   };
 
   const visibleTestimonials = () => {
-    return [testimonials[currentTestimonial]];
+    const step = typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1;
+    const result = [];
+    for (let i = 0; i < step; i++) {
+      const index = (currentTestimonial + i) % testimonials.length;
+      result.push(testimonials[index]);
+    }
+    return result;
   };
 
-  const totalDots = testimonials.length;
-  const currentDot = currentTestimonial;
+  const totalDots = Math.ceil(testimonials.length / (typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1));
+  const currentDot = Math.floor(currentTestimonial / (typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1));
 
   return (
     <div className="relative">
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center px-4 lg:px-8 overflow-hidden">
         {/* Decorative Bike Graphics */}
-        <div className="absolute inset-0 pointer-events-none opacity-5">
-          <svg className="absolute left-10 top-1/4 w-32 h-32" viewBox="0 0 100 100" fill="none">
-            <circle cx="25" cy="65" r="15" stroke="currentColor" strokeWidth="3"/>
-            <circle cx="75" cy="65" r="15" stroke="currentColor" strokeWidth="3"/>
-            <path d="M25 50 L75 50 L65 30 L35 30 Z" stroke="currentColor" strokeWidth="3" fill="none"/>
-            <path d="M35 30 L25 65 M65 30 L75 65" stroke="currentColor" strokeWidth="2"/>
-          </svg>
-          <svg className="absolute right-10 bottom-1/4 w-40 h-40" viewBox="0 0 100 100" fill="none">
-            <circle cx="30" cy="60" r="18" stroke="currentColor" strokeWidth="3"/>
-            <circle cx="80" cy="60" r="18" stroke="currentColor" strokeWidth="3"/>
-            <path d="M30 42 L80 42 L70 25 L40 25 Z" stroke="currentColor" strokeWidth="3" fill="none"/>
-            <path d="M40 25 L30 60 M70 25 L80 60" stroke="currentColor" strokeWidth="2"/>
-            <circle cx="55" cy="42" r="8" stroke="currentColor" strokeWidth="2"/>
-          </svg>
-          <svg className="absolute left-1/4 bottom-20 w-24 h-24 opacity-30" viewBox="0 0 100 100" fill="none">
-            <path d="M20 80 L50 20 L80 80" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
-            <circle cx="50" cy="20" r="8" stroke="currentColor" strokeWidth="3"/>
-          </svg>
+        <div className="absolute inset-0 pointer-events-none">
+          <img 
+            src="/images/bike-graphic.png" 
+            alt="" 
+            className="absolute left-0 top-1/4 w-48 md:w-64 lg:w-80 opacity-5"
+          />
+          <img 
+            src="/images/bike-graphic.png" 
+            alt="" 
+            className="absolute right-0 bottom-1/4 w-48 md:w-64 lg:w-80 opacity-5 scale-x-[-1]"
+          />
+          <img 
+            src="/images/bike-graphic.png" 
+            alt="" 
+            className="absolute left-1/4 bottom-20 w-32 md:w-48 opacity-10"
+          />
         </div>
         
         <div className="container mx-auto text-center relative z-10">
@@ -683,7 +689,7 @@ export default function HomePage() {
               {Array.from({ length: totalDots }).map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => setCurrentTestimonial(index)}
+                  onClick={() => setCurrentTestimonial(index * (typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1))}
                   className={`w-2 h-2 rounded-full transition-all ${
                     index === currentDot
                       ? "bg-[#22c55e] w-6"

@@ -7,6 +7,10 @@ export interface BikeEvent {
   type: "race" | "ride" | "event";
   description: string;
   website: string;
+  entryFee?: string;
+  prizeMoney?: string;
+  distance?: string;
+  categories?: string;
 }
 
 export const events: BikeEvent[] = [
@@ -19,6 +23,9 @@ export const events: BikeEvent[] = [
     type: "race",
     description: "The ultimate 3-day mountain bike stage race from the Drakensberg to the South Coast sea.",
     website: "https://sani2c.co.za",
+    entryFee: "R2,200 - R2,800",
+    distance: "270km",
+    categories: "Solo, Duo, Team of 3",
   },
   {
     id: "go2berg-2026",
@@ -29,6 +36,9 @@ export const events: BikeEvent[] = [
     type: "race",
     description: "3-day mountain bike stage race in the Drakensberg mountains.",
     website: "https://go2berg.co.za",
+    entryFee: "R1,800 - R2,200",
+    distance: "180km",
+    categories: "Solo, Duo",
   },
   {
     id: "berg-n-bush-2026",
@@ -39,6 +49,9 @@ export const events: BikeEvent[] = [
     type: "race",
     description: "4-day mountain bike adventure through the Drakensberg.",
     website: "https://bergnebush.co.za",
+    entryFee: "R2,400 - R3,000",
+    distance: "240km",
+    categories: "Solo, Duo, Team",
   },
   {
     id: "coastal-krash-2026",
@@ -48,6 +61,9 @@ export const events: BikeEvent[] = [
     type: "ride",
     description: "Annual mountain bike ride along the beautiful South Coast trails.",
     website: "https://thebikemech.co.za",
+    entryFee: "R200",
+    distance: "35km / 55km",
+    categories: "All Levels",
   },
   {
     id: "sani-brews-2026",
@@ -57,6 +73,9 @@ export const events: BikeEvent[] = [
     type: "ride",
     description: "Social ride ending at Sanihawk brewery with craft beer tastings.",
     website: "https://thebikemech.co.za",
+    entryFee: "R150",
+    distance: "25km",
+    categories: "Social / Beginner",
   },
   {
     id: "winter-ride-series-2026",
@@ -67,6 +86,9 @@ export const events: BikeEvent[] = [
     type: "ride",
     description: "Weekly group rides throughout winter. All skill levels welcome.",
     website: "https://thebikemech.co.za",
+    entryFee: "Free",
+    distance: "20-40km",
+    categories: "All Levels",
   },
   {
     id: "xcm-champs-2026",
@@ -76,6 +98,9 @@ export const events: BikeEvent[] = [
     type: "race",
     description: "KwaZulu-Natal Cross Country Marathon Championships.",
     website: "https://cyclingkwazulunatal.co.za",
+    entryFee: "R400",
+    distance: "80km",
+    categories: "Elite, Age Groups",
   },
   {
     id: "summer-solstice-2026",
@@ -85,6 +110,9 @@ export const events: BikeEvent[] = [
     type: "ride",
     description: "Celebrate the longest day of the year with an evening sunset ride.",
     website: "https://thebikemech.co.za",
+    entryFee: "R100",
+    distance: "15km",
+    categories: "Family Friendly",
   },
 ];
 

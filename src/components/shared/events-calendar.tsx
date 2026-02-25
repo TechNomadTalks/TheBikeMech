@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, MapPin, ExternalLink, ChevronLeft, ChevronRight, DollarSign, Route, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -39,7 +39,7 @@ export function EventsCalendar() {
     return events
       .filter(event => new Date(event.date) >= today)
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-      .slice(0, 3);
+      .slice(0, 6);
   }, []);
 
   const prevMonth = () => {
@@ -62,8 +62,8 @@ export function EventsCalendar() {
 
   return (
     <div className="space-y-8">
-      {/* Upcoming Events Highlight */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Events Grid with Images */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {upcomingEvents.map((event, index) => (
           <motion.div
             key={event.id}
@@ -72,31 +72,50 @@ export function EventsCalendar() {
             transition={{ delay: index * 0.1 }}
           >
             <Card 
-              className="glass-card glass-card-hover p-4 cursor-pointer"
+              className="glass-card glass-card-hover overflow-hidden cursor-pointer"
               onClick={() => setSelectedEvent(event)}
             >
-              <div className="flex items-start justify-between mb-2">
+              {/* Image Placeholder */}
+              <div className="aspect-video bg-gradient-to-br from-[#22c55e]/20 to-[#06b6d4]/20 relative flex items-center justify-center">
+                <div className="text-4xl opacity-30">🚴</div>
                 <Badge 
                   variant={event.type === "race" ? "default" : "secondary"}
-                  className={event.type === "race" ? "bg-[#22c55e]" : "bg-[#06b6d4]"}
+                  className="absolute top-3 left-3"
                 >
                   {event.type === "race" ? "🏁 Race" : "🚴 Ride"}
                 </Badge>
-                <span className="text-xs text-zinc-500">
-                  {formatDate(event.date)}
-                </span>
               </div>
-              <h4 className="font-semibold text-white mb-1">{event.name}</h4>
-              <div className="flex items-center gap-1 text-xs text-zinc-400">
-                <MapPin className="w-3 h-3" />
-                {event.location}
+              
+              <div className="p-4">
+                <div className="flex items-center gap-2 text-xs text-zinc-400 mb-2">
+                  <Calendar className="w-3 h-3" />
+                  {formatDate(event.date)}
+                  {event.endDate && ` - ${formatDate(event.endDate)}`}
+                </div>
+                <h4 className="font-semibold text-white mb-1">{event.name}</h4>
+                <p className="text-zinc-400 text-sm line-clamp-2 mb-3">{event.description}</p>
+                
+                <div className="flex flex-wrap gap-3 text-xs">
+                  {event.entryFee && (
+                    <div className="flex items-center gap-1 text-zinc-400">
+                      <DollarSign className="w-3 h-3" />
+                      {event.entryFee}
+                    </div>
+                  )}
+                  {event.distance && (
+                    <div className="flex items-center gap-1 text-zinc-400">
+                      <Route className="w-3 h-3" />
+                      {event.distance}
+                    </div>
+                  )}
+                </div>
               </div>
             </Card>
           </motion.div>
         ))}
       </div>
 
-      {/* Calendar Grid */}
+      {/* Calendar */}
       <Card className="glass-card p-4 md:p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">
@@ -146,7 +165,7 @@ export function EventsCalendar() {
                 key={day}
                 className={`aspect-square relative rounded-lg flex flex-col items-center justify-start pt-1 cursor-pointer transition-colors ${
                   dayEvents.length > 0 
-                    ? "bg-[#22c55e]/10 hover:bg-[#22c55e]/20" 
+                    ? "bg-red-500/10 hover:bg-red-500/20" 
                     : "hover:bg-white/5"
                 } ${isToday ? "ring-1 ring-[#22c55e]" : ""}`}
                 onClick={() => dayEvents.length > 0 && setSelectedEvent(dayEvents[0])}
@@ -155,7 +174,9 @@ export function EventsCalendar() {
                   {day}
                 </span>
                 {dayEvents.length > 0 && (
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e] mt-0.5" />
+                  <div className="absolute top-1 right-1 w-3 h-3 flex items-center justify-center">
+                    <span className="text-red-500 text-xs font-bold">✕</span>
+                  </div>
                 )}
               </div>
             );
@@ -170,7 +191,7 @@ export function EventsCalendar() {
             className="mt-6 p-4 rounded-lg bg-white/5 border border-white/10"
           >
             <div className="flex items-start justify-between">
-              <div>
+              <div className="flex-1">
                 <Badge 
                   variant={selectedEvent.type === "race" ? "default" : "secondary"}
                   className="mb-2"
@@ -179,16 +200,38 @@ export function EventsCalendar() {
                 </Badge>
                 <h4 className="font-semibold text-white text-lg">{selectedEvent.name}</h4>
                 <p className="text-zinc-400 text-sm mt-1">{selectedEvent.description}</p>
-                <div className="flex flex-wrap gap-4 mt-3 text-sm text-zinc-400">
-                  <div className="flex items-center gap-1">
+                
+                <div className="flex flex-wrap gap-4 mt-3 text-sm">
+                  <div className="flex items-center gap-1 text-zinc-300">
                     <Calendar className="w-4 h-4" />
                     {formatDate(selectedEvent.date)}
                     {selectedEvent.endDate && ` - ${formatDate(selectedEvent.endDate)}`}
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 text-zinc-300">
                     <MapPin className="w-4 h-4" />
                     {selectedEvent.location}
                   </div>
+                </div>
+
+                <div className="flex flex-wrap gap-4 mt-3 text-sm">
+                  {selectedEvent.entryFee && (
+                    <div className="flex items-center gap-1 text-[#22c55e]">
+                      <DollarSign className="w-4 h-4" />
+                      <span className="font-medium">{selectedEvent.entryFee}</span>
+                    </div>
+                  )}
+                  {selectedEvent.distance && (
+                    <div className="flex items-center gap-1 text-[#06b6d4]">
+                      <Route className="w-4 h-4" />
+                      <span className="font-medium">{selectedEvent.distance}</span>
+                    </div>
+                  )}
+                  {selectedEvent.categories && (
+                    <div className="flex items-center gap-1 text-[#f97316]">
+                      <Trophy className="w-4 h-4" />
+                      <span className="font-medium">{selectedEvent.categories}</span>
+                    </div>
+                  )}
                 </div>
               </div>
               <Button
@@ -204,7 +247,7 @@ export function EventsCalendar() {
               href={selectedEvent.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 mt-3 text-[#22c55e] hover:underline text-sm"
+              className="inline-flex items-center gap-1 mt-4 text-[#22c55e] hover:underline text-sm"
             >
               More Info <ExternalLink className="w-3 h-3" />
             </a>
@@ -221,6 +264,10 @@ export function EventsCalendar() {
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-[#06b6d4]" />
           <span>Group Ride</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-red-500 text-xs font-bold">✕</span>
+          <span>Event Date</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full ring-1 ring-[#22c55e]" />
