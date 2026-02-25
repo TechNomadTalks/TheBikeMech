@@ -289,8 +289,8 @@ export default function HomePage() {
     setCurrentTestimonial((prev) => (prev - step + testimonials.length) % testimonials.length);
   };
 
-  const visibleTestimonials = () => {
-    const result = [];
+  const visibleTestimonials = (): typeof testimonials => {
+    const result: typeof testimonials = [];
     for (let i = 0; i < step; i++) {
       const index = (currentTestimonial + i) % testimonials.length;
       result.push(testimonials[index]);
