@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, HelpCircle, Package, Home, Image, FileText, MessageCircle, Bike, Wrench } from "lucide-react";
 import Link from "next/link";
-import Fuse from "fuse.js";
 
 interface SearchResult {
   type: "service" | "bike" | "blog" | "faq" | "page";
@@ -131,6 +130,16 @@ export function SearchDropdown({ className = "", onClose }: SearchDropdownProps)
 
   useEffect(() => { setMounted(true); }, []);
 
+  const simpleSearch = (items: any[], keys: string[], term: string): any[] => {
+    const lowerTerm = term.toLowerCase();
+    return items.filter(item => 
+      keys.some(key => {
+        const value = key.split('.').reduce((obj, k) => obj?.[k], item);
+        return value?.toString().toLowerCase().includes(lowerTerm);
+      })
+    );
+  };
+
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
@@ -141,16 +150,15 @@ export function SearchDropdown({ className = "", onClose }: SearchDropdownProps)
     const searchResults: SearchResult[] = [];
     const term = query.trim();
 
-    serviceFuse.search(term).slice(0, 3).forEach(r => searchResults.push({ type: "service", item: r.item, score: r.score ?? 1 }));
-    bikeFuse.search(term).slice(0, 3).forEach(r => searchResults.push({ type: "bike", item: r.item, score: r.score ?? 1 }));
-    blogFuse.search(term).slice(0, 2).forEach(r => searchResults.push({ type: "blog", item: r.item, score: r.score ?? 1 }));
-    faqFuse.search(term).slice(0, 3).forEach(r => searchResults.push({ type: "faq", item: r.item, score: r.score ?? 1 }));
-    pageFuse.search(term).slice(0, 2).forEach(r => searchResults.push({ type: "page", item: r.item, score: r.score ?? 1 }));
+    simpleSearch(services, ['name', 'description'], term).slice(0, 3).forEach(item => searchResults.push({ type: "service", item, score: 1 }));
+    simpleSearch(bikes, ['title', 'description', 'category'], term).slice(0, 3).forEach(item => searchResults.push({ type: "bike", item, score: 1 }));
+    simpleSearch(blogPosts, ['title', 'excerpt', 'category'], term).slice(0, 2).forEach(item => searchResults.push({ type: "blog", item, score: 1 }));
+    simpleSearch(faqs, ['question', 'answer', 'category'], term).slice(0, 3).forEach(item => searchResults.push({ type: "faq", item, score: 1 }));
+    simpleSearch(sitePages, ['title', 'id'], term).slice(0, 2).forEach(item => searchResults.push({ type: "page", item, score: 1 }));
 
-    searchResults.sort((a, b) => a.score - b.score);
     setResults(searchResults.slice(0, 10));
     setIsOpen(true);
-  }, [query, serviceFuse, bikeFuse, blogFuse, faqFuse, pageFuse]);
+  }, [query]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
