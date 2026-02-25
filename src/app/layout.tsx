@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Navbar } from "@/components/shared/navbar";
 import { Footer } from "@/components/shared/footer";
 import { WhatsAppButton } from "@/components/shared/whatsapp-button";
+import { BackToTopButton } from "@/components/shared/back-to-top";
 import { GradientOrbs } from "@/components/shared/gradient-orbs";
 
 const geistSans = Geist({
@@ -55,6 +56,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <BackToTopButton />
         <WhatsAppButton />
         <Toaster />
       </body>

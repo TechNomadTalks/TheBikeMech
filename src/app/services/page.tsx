@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { 
@@ -10,7 +11,8 @@ import {
   Bike, 
   AlertTriangle,
   ArrowRight,
-  CheckCircle2
+  CheckCircle2,
+  Flame
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -188,6 +190,12 @@ const stagger = {
 };
 
 export default function ServicesPage() {
+  const [showPopular, setShowPopular] = useState(false);
+
+  const displayedServices = showPopular
+    ? [...allServices.filter(s => s.popular), ...allServices.filter(s => !s.popular)]
+    : allServices;
+
   return (
     <div className="py-12 px-4 lg:px-8">
       <div className="container mx-auto max-w-7xl">
@@ -218,9 +226,21 @@ export default function ServicesPage() {
           </motion.p>
         </motion.div>
 
+        {/* Popular Filter Toggle */}
+        <div className="flex justify-center mb-8">
+          <Button
+            variant={showPopular ? "default" : "outline"}
+            onClick={() => setShowPopular(!showPopular)}
+            className={showPopular ? "btn-primary flex items-center gap-2" : "btn-secondary flex items-center gap-2"}
+          >
+            <Flame className="w-4 h-4" />
+            {showPopular ? "Showing Popular First" : "Show Popular First"}
+          </Button>
+        </div>
+
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {allServices.map((service, index) => {
+          {displayedServices.map((service, index) => {
             const Icon = service.icon;
             return (
               <motion.div

@@ -252,13 +252,23 @@ export default function HomePage() {
         </div>
 
         {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
+        <button
+          type="button"
+          onClick={() => {
+            const servicesSection = document.getElementById("services");
+            if (servicesSection) {
+              servicesSection.scrollIntoView({ behavior: "smooth" });
+            }
+          }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 cursor-pointer"
         >
-          <ArrowDown className="w-8 h-8 text-[#22c55e]" />
-        </motion.div>
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <ArrowDown className="w-8 h-8 text-[#22c55e]" />
+          </motion.div>
+        </button>
       </section>
 
       {/* Stats Section */}
@@ -438,8 +448,15 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Mobile Triangle Indicator */}
+      <div className="lg:hidden relative">
+        <div className="absolute left-1/2 -translate-x-1/2 -top-6">
+          <div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-[#22c55e]" />
+        </div>
+      </div>
+
       {/* Services Preview Section */}
-      <section className="py-20 px-4 lg:px-8">
+      <section id="services" className="py-20 px-4 lg:px-8">
         <div className="container mx-auto">
           <motion.div
             initial="hidden"

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SearchDropdown } from "@/components/shared/search-dropdown";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -78,7 +79,8 @@ export function Navbar() {
           </div>
 
           {/* CTA Button */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-3">
+            <SearchDropdown className="w-48" />
             <Link href="/contact">
               <Button className="btn-primary">
                 Book Service
@@ -87,23 +89,28 @@ export function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          <div className="flex items-center gap-2 lg:hidden">
+            <Link href="/contact" className="p-2 rounded-lg bg-[#22c55e] text-black">
+              <span className="text-sm font-medium">Book</span>
+            </Link>
+            <button
+              className="p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
         <div
           className={cn(
             "lg:hidden overflow-hidden transition-all duration-300",
-            isOpen ? "max-h-[500px] pb-4" : "max-h-0"
+            isOpen ? "max-h-[700px]" : "max-h-0"
           )}
         >
-          <div className="flex flex-col gap-1 pt-2 bg-[#0a0a0a] -mx-4 px-4 pb-4 border-t border-white/10 mt-2">
+          <div className="flex flex-col gap-1 pt-4 -mx-4 px-4">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -118,11 +125,9 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link href="/contact" className="mt-2">
-              <Button className="btn-primary w-full">
-                Book Service
-              </Button>
-            </Link>
+            <div className="mt-2">
+              <SearchDropdown className="w-full" onClose={() => setIsOpen(false)} />
+            </div>
           </div>
         </div>
       </nav>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
   Facebook, 
@@ -9,12 +9,13 @@ import {
   Bike, 
   ExternalLink,
   ArrowRight,
-  ChevronRight
+  ChevronDown,
+  Calendar,
+  Tag
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const categories = ["All", "Mountain Bikes", "Road Bikes", "Kids Bikes", "Cruisers", "E-Bikes"];
 
@@ -100,6 +101,7 @@ const fadeInUp = {
 
 export default function SalesPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [expandedBike, setExpandedBike] = useState<number | null>(null);
 
   const filteredBikes = selectedCategory === "All"
     ? sampleBikes
@@ -209,7 +211,10 @@ export default function SalesPage() {
             >
               <Card className="glass-card glass-card-hover overflow-hidden group">
                 {/* Image Placeholder */}
-                <div className="aspect-[4/3] image-placeholder relative">
+                <div 
+                  className="aspect-[4/3] image-placeholder relative cursor-pointer"
+                  onClick={() => setExpandedBike(expandedBike === bike.id ? null : bike.id)}
+                >
                   {bike.featured && (
                     <Badge className="absolute top-3 left-3 bg-[#22c55e] text-black">
                       Featured
@@ -240,6 +245,51 @@ export default function SalesPage() {
                     </Badge>
                     <span>{bike.year}</span>
                   </div>
+
+                  {/* Expand Button */}
+                  <button
+                    onClick={() => setExpandedBike(expandedBike === bike.id ? null : bike.id)}
+                    className="w-full mt-3 flex items-center justify-center gap-1 py-2 text-sm text-[#22c55e] hover:text-white transition-colors"
+                  >
+                    {expandedBike === bike.id ? "Less Details" : "More Details"}
+                    <motion.div
+                      animate={{ rotate: expandedBike === bike.id ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </motion.div>
+                  </button>
+
+                  {/* Expanded Details */}
+                  <AnimatePresence>
+                    {expandedBike === bike.id && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pt-3 mt-3 border-t border-white/10 space-y-2">
+                          <div className="flex items-center gap-2 text-sm text-zinc-400">
+                            <Calendar className="w-4 h-4" />
+                            <span>Year: {bike.year}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-zinc-400">
+                            <Tag className="w-4 h-4" />
+                            <span>Category: {bike.category}</span>
+                          </div>
+                          <p className="text-zinc-300 text-sm mt-2">{bike.description}</p>
+                          <p className="text-zinc-400 text-xs mt-2">
+                            This bike has been serviced and is ready to ride. Contact us for more details or to arrange a test ride.
+                          </p>
+                          <Button className="w-full mt-3 btn-primary" size="sm">
+                            Inquire About This Bike
+                          </Button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </Card>
             </motion.div>
