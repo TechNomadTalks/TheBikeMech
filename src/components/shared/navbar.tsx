@@ -78,8 +78,11 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* CTA Button */}
+          {/* Search and CTA */}
           <div className="hidden lg:flex items-center gap-3">
+            <Link href="/contact" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
+              Contact
+            </Link>
             <SearchDropdown className="w-48" />
             <Link href="/contact">
               <Button className="btn-primary">

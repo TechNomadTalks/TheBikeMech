@@ -191,10 +191,26 @@ const stagger = {
 
 export default function ServicesPage() {
   const [showPopular, setShowPopular] = useState(false);
+  const [priceFilter, setPriceFilter] = useState<string>("all");
+
+  const priceRanges = [
+    { value: "all", label: "All Prices" },
+    { value: "under200", label: "Under R200" },
+    { value: "200to400", label: "R200 - R400" },
+    { value: "over400", label: "Over R400" },
+  ];
+
+  const filteredServices = allServices.filter(service => {
+    if (priceFilter === "all") return true;
+    if (priceFilter === "under200") return service.price < 200;
+    if (priceFilter === "200to400") return service.price >= 200 && service.price <= 400;
+    if (priceFilter === "over400") return service.price > 400;
+    return true;
+  });
 
   const displayedServices = showPopular
-    ? [...allServices.filter(s => s.popular), ...allServices.filter(s => !s.popular)]
-    : allServices;
+    ? [...filteredServices.filter(s => s.popular), ...filteredServices.filter(s => !s.popular)]
+    : filteredServices;
 
   return (
     <div className="py-12 px-4 lg:px-8">
@@ -226,16 +242,30 @@ export default function ServicesPage() {
           </motion.p>
         </motion.div>
 
-        {/* Popular Filter Toggle */}
-        <div className="flex justify-center mb-8">
+        {/* Filter Section */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
           <Button
             variant={showPopular ? "default" : "outline"}
             onClick={() => setShowPopular(!showPopular)}
             className={showPopular ? "btn-primary flex items-center gap-2" : "btn-secondary flex items-center gap-2"}
           >
             <Flame className="w-4 h-4" />
-            {showPopular ? "Showing Popular First" : "Show Popular First"}
+            {showPopular ? "Popular" : "Popular"}
           </Button>
+          
+          <div className="flex gap-2">
+            {priceRanges.map((range) => (
+              <Button
+                key={range.value}
+                variant={priceFilter === range.value ? "default" : "outline"}
+                size="sm"
+                onClick={() => setPriceFilter(range.value)}
+                className={priceFilter === range.value ? "btn-primary" : "btn-secondary"}
+              >
+                {range.label}
+              </Button>
+            ))}
+          </div>
         </div>
 
         {/* Services Grid */}
