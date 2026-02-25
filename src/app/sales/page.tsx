@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Script from "next/script";
 import { 
   Facebook, 
   Filter, 
@@ -336,6 +337,7 @@ export default function SalesPage() {
           </div>
         </motion.div>
       </div>
+      <Script async defer src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0" crossOrigin="anonymous" strategy="lazyOnload" />
     </div>
   );
 }
