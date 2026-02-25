@@ -190,7 +190,7 @@ const stagger = {
 export default function ServicesPage() {
   return (
     <div className="py-12 px-4 lg:px-8">
-      <div className="container mx-auto">
+      <div className="container mx-auto max-w-7xl">
         {/* Header */}
         <motion.div
           initial="hidden"

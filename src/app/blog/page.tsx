@@ -1,16 +1,20 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Fuse from "fuse.js";
 import { 
   Calendar, 
   Clock, 
   ArrowRight,
-  User
+  User,
+  Search
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 
 const blogPosts = [
   {
@@ -87,12 +91,23 @@ const fadeInUp = {
 };
 
 export default function BlogPage() {
-  const featuredPosts = blogPosts.filter((post) => post.featured);
-  const regularPosts = blogPosts.filter((post) => !post.featured);
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  const fuse = useMemo(() => new Fuse(blogPosts, {
+    keys: ['title', 'excerpt', 'category'],
+    threshold: 0.3,
+  }), [blogPosts]);
+
+  const filteredPosts = searchQuery 
+    ? fuse.search(searchQuery).map(result => result.item)
+    : blogPosts;
+
+  const featuredPosts = filteredPosts.filter((post) => post.featured);
+  const regularPosts = filteredPosts.filter((post) => !post.featured);
 
   return (
     <div className="py-12 px-4 lg:px-8">
-      <div className="container mx-auto">
+      <div className="container mx-auto max-w-7xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -105,10 +120,22 @@ export default function BlogPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Tips, Guides & <span className="gradient-text">News</span>
           </h1>
-          <p className="text-zinc-400 max-w-2xl mx-auto">
+          <p className="text-zinc-400 max-w-2xl mx-auto mb-8">
             Stay updated with the latest cycling tips, maintenance guides, and industry news 
             from our expert team of bicycle mechanics.
           </p>
+          
+          {/* Search */}
+          <div className="max-w-md mx-auto relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+            <Input
+              type="text"
+              placeholder="Search articles..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-500 focus:border-[#22c55e]"
+            />
+          </div>
         </motion.div>
 
         {/* Featured Posts */}

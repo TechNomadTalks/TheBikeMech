@@ -48,14 +48,14 @@ export function Navbar() {
           : "bg-transparent"
       )}
     >
-      <nav className="container mx-auto px-4 lg:px-8">
+      <nav className="container mx-auto px-4 lg:px-8 max-w-7xl">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <img 
               src="/images/logo.png" 
               alt="The Bike Mech" 
-              className="h-12 w-auto rounded-lg"
+              className="h-10 w-auto max-w-[140px]"
             />
           </Link>
 

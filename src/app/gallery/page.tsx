@@ -25,72 +25,70 @@ const galleryImages = [
     title: "Full Suspension Overhaul",
     category: "Repairs",
     description: "Complete suspension service on a mountain bike",
+    image: "/images/561564733_24980808734892635_6173447473608756971_n.jpg",
   },
   {
     id: 2,
     title: "Custom Road Bike Build",
     category: "Custom Builds",
     description: "Full carbon road bike build from frame up",
+    image: "/images/559126811_24980808588225983_7987722874900564762_n.jpg",
   },
   {
     id: 3,
     title: "Drivetrain Replacement",
     category: "Repairs",
     description: "New chain, cassette, and chainring installation",
+    image: "/images/545959328_24657224403917738_5108936384260146638_n.jpg",
   },
   {
     id: 4,
     title: "Vintage Restoration",
     category: "Before & After",
     description: "Classic steel frame restoration project",
+    image: "/images/545699099_24657224340584411_9202809481717145839_n.jpg",
   },
   {
     id: 5,
     title: "The Workshop",
     category: "Shop",
     description: "Our fully equipped service area",
+    image: "/images/565336339_24980784798228362_6401934621629016541_n.jpg",
   },
   {
     id: 6,
     title: "Mountain Bike Build",
     category: "Custom Builds",
     description: "Custom MTB build with premium components",
+    image: "/images/565163355_24980815818225260_5390923980163679501_n.jpg",
   },
   {
     id: 7,
     title: "Brake System Upgrade",
     category: "Repairs",
     description: "Hydraulic brake installation and bleeding",
+    image: "/images/545088905_24658028260504019_5541810624885367591_n.jpg",
   },
   {
     id: 8,
     title: "Race Day Support",
     category: "Events",
     description: "On-site mechanical support at local races",
+    image: "/images/sani2cServicePAck.jpg",
   },
   {
     id: 9,
     title: "Wheel Building",
     category: "Repairs",
     description: "Hand-built wheel with custom spokes",
+    image: "/images/546525045_24658028250504020_2286864481216630780_n.jpg",
   },
   {
     id: 10,
     title: "E-Bike Conversion",
     category: "Custom Builds",
     description: "Electric motor installation on commuter bike",
-  },
-  {
-    id: 11,
-    title: "Rusty Chain Before",
-    category: "Before & After",
-    description: "Severely neglected drivetrain",
-  },
-  {
-    id: 12,
-    title: "Community Ride",
-    category: "Events",
-    description: "Weekly group ride from the shop",
+    image: "/images/561564733_24980808734892635_6173447473608756971_n.jpg",
   },
 ];
 
@@ -183,10 +181,12 @@ export default function GalleryPage() {
                   className="glass-card glass-card-hover overflow-hidden cursor-pointer group"
                   onClick={() => openLightbox(index)}
                 >
-                  <div className="aspect-square image-placeholder relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Camera className="w-10 h-10 text-zinc-600" />
-                    </div>
+                  <div className="aspect-square relative">
+                    <img 
+                      src={image.image} 
+                      alt={image.title}
+                      className="w-full h-full object-cover"
+                    />
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <span className="text-white text-sm">View Image</span>
                     </div>
