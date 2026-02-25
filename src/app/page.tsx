@@ -390,22 +390,17 @@ export default function HomePage() {
               className="col-span-1"
             >
               <Card className="glass-card p-3 md:p-6">
-                <h3 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-6">Services</h3>
-                <div className="space-y-2 md:space-y-4">
+                <h3 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-4">Services</h3>
+                <div className="space-y-3">
                   {[
-                    { label: 'Repairs', value: 45, color: 'bg-[#22c55e]', text: 'text-[#22c55e]' },
-                    { label: 'Service', value: 30, color: 'bg-[#ec4899]', text: 'text-[#ec4899]' },
-                    { label: 'Events', value: 15, color: 'bg-[#3b82f6]', text: 'text-[#3b82f6]' },
-                    { label: 'Custom Builds', value: 10, color: 'bg-[#f97316]', text: 'text-[#f97316]' },
+                    { label: 'Repairs', color: 'bg-[#22c55e]' },
+                    { label: 'Service', color: 'bg-[#ec4899]' },
+                    { label: 'Events', color: 'bg-[#3b82f6]' },
+                    { label: 'Custom Builds', color: 'bg-[#f97316]' },
                   ].map((item) => (
-                    <div key={item.label}>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-zinc-300">{item.label}</span>
-                        <span className={item.text}>{item.value}%</span>
-                      </div>
-                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                        <div className={`h-full ${item.color} rounded-full`} style={{ width: `${item.value}%` }} />
-                      </div>
+                    <div key={item.label} className="relative">
+                      <span className="text-zinc-300 text-sm">{item.label}</span>
+                      <div className={`absolute bottom-0 left-0 h-0.5 ${item.color} w-full`} />
                     </div>
                   ))}
                 </div>
