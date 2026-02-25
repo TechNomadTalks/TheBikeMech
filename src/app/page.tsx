@@ -424,7 +424,7 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
+          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-8">
             {/* Customer Satisfaction */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
