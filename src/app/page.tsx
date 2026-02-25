@@ -270,14 +270,6 @@ export default function HomePage() {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-play testimonials
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 3) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
   const nextTestimonial = () => {
     setCurrentTestimonial((prev) => (prev + 3) % testimonials.length);
   };
@@ -653,25 +645,25 @@ export default function HomePage() {
           </motion.div>
 
           <div className="max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible pb-2 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
               {visibleTestimonials().map((testimonial, idx) => (
-                <Card key={`${testimonial.id}-${idx}`} className="glass-card p-6 relative">
-                  <div className="flex gap-1 mb-3">
+                <Card key={`${testimonial.id}-${idx}`} className="glass-card p-4 md:p-6 flex-shrink-0 w-[85vw] md:w-auto">
+                  <div className="flex gap-1 mb-2 md:mb-3">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-[#22c55e] text-[#22c55e]" />
+                      <Star key={i} className="w-3 h-4 md:w-4 fill-[#22c55e] text-[#22c55e]" />
                     ))}
                   </div>
 
-                  <p className="text-zinc-300 text-sm mb-4 leading-relaxed line-clamp-4">
+                  <p className="text-zinc-300 text-xs md:text-sm mb-3 md:mb-4 leading-relaxed line-clamp-3 md:line-clamp-4">
                     "{testimonial.review}"
                   </p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#22c55e] to-[#06b6d4] flex items-center justify-center text-black font-bold text-sm">
+                  <div className="flex items-center gap-2 md:gap-3">
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-[#22c55e] to-[#06b6d4] flex items-center justify-center text-black font-bold text-xs md:text-sm">
                       {testimonial.name.charAt(0)}
                     </div>
                     <div>
-                      <p className="text-white font-medium text-sm">{testimonial.name}</p>
-                      <p className="text-zinc-500 text-xs">{testimonial.source}</p>
+                      <p className="text-white font-medium text-xs md:text-sm">{testimonial.name}</p>
+                      <p className="text-zinc-500 text-[10px] md:text-xs">{testimonial.source}</p>
                     </div>
                   </div>
                 </Card>
