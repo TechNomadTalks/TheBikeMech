@@ -273,18 +273,30 @@ export default function HomePage() {
   // Auto-play testimonials
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+      setCurrentTestimonial((prev) => (prev + 3) % testimonials.length);
     }, 5000);
     return () => clearInterval(timer);
   }, []);
 
   const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    setCurrentTestimonial((prev) => (prev + 3) % testimonials.length);
   };
 
   const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setCurrentTestimonial((prev) => (prev - 3 + testimonials.length) % testimonials.length);
   };
+
+  const visibleTestimonials = () => {
+    const result = [];
+    for (let i = 0; i < 3; i++) {
+      const index = (currentTestimonial + i) % testimonials.length;
+      result.push(testimonials[index]);
+    }
+    return result;
+  };
+
+  const totalDots = Math.ceil(testimonials.length / 3);
+  const currentDot = Math.floor(currentTestimonial / 3);
 
   return (
     <div className="relative">
@@ -640,63 +652,65 @@ export default function HomePage() {
             </motion.p>
           </motion.div>
 
-          <div className="max-w-3xl mx-auto">
-            <Card className="glass-card p-8 relative">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                <div className="flex gap-1">
-                  {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-[#22c55e] text-[#22c55e]" />
-                  ))}
-                </div>
-              </div>
-
-              <div className="text-center pt-4">
-                <p className="text-lg md:text-xl text-white mb-6 leading-relaxed">
-                  "{testimonials[currentTestimonial].review}"
-                </p>
-                <div className="flex items-center justify-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#22c55e] to-[#06b6d4] flex items-center justify-center text-black font-bold">
-                    {testimonials[currentTestimonial].name.charAt(0)}
+          <div className="max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {visibleTestimonials().map((testimonial, idx) => (
+                <Card key={`${testimonial.id}-${idx}`} className="glass-card p-6 relative">
+                  <div className="flex gap-1 mb-3">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-[#22c55e] text-[#22c55e]" />
+                    ))}
                   </div>
-                  <div className="text-left">
-                    <p className="text-white font-semibold">{testimonials[currentTestimonial].name}</p>
-                    <p className="text-zinc-500 text-sm">{testimonials[currentTestimonial].source}</p>
-                  </div>
-                </div>
-              </div>
 
-              {/* Navigation arrows */}
+                  <p className="text-zinc-300 text-sm mb-4 leading-relaxed line-clamp-4">
+                    "{testimonial.review}"
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#22c55e] to-[#06b6d4] flex items-center justify-center text-black font-bold text-sm">
+                      {testimonial.name.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-white font-medium text-sm">{testimonial.name}</p>
+                      <p className="text-zinc-500 text-xs">{testimonial.source}</p>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {/* Navigation arrows */}
+            <div className="flex justify-center gap-4 mt-8">
               <button
                 onClick={prevTestimonial}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
-                aria-label="Previous testimonial"
+                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+                aria-label="Previous testimonials"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={nextTestimonial}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
-                aria-label="Next testimonial"
+                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+                aria-label="Next testimonials"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
+            </div>
 
-              {/* Dots indicator */}
-              <div className="flex justify-center gap-2 mt-6">
-                {testimonials.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentTestimonial(index)}
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      index === currentTestimonial
-                        ? "bg-[#22c55e] w-6"
-                        : "bg-white/20 hover:bg-white/40"
-                    }`}
-                    aria-label={`Go to testimonial ${index + 1}`}
-                  />
-                ))}
-              </div>
-            </Card>
+            {/* Dots indicator */}
+            <div className="flex justify-center gap-2 mt-4">
+              {Array.from({ length: totalDots }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index * 3)}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    index === currentDot
+                      ? "bg-[#22c55e] w-6"
+                      : "bg-white/20 hover:bg-white/40"
+                  }`}
+                  aria-label={`Go to testimonials ${index * 3 + 1}-${index * 3 + 3}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
