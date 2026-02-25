@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, HelpCircle, Package, Home, Image, FileText, MessageCircle, Bike, Wrench } from "lucide-react";
@@ -119,14 +119,6 @@ export function SearchDropdown({ className = "", onClose }: SearchDropdownProps)
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-
-  const fuseOptions = { threshold: 0.3, includeScore: true };
-
-  const serviceFuse = useMemo(() => new Fuse(services, { ...fuseOptions, keys: ['name', 'description'] }), []);
-  const bikeFuse = useMemo(() => new Fuse(bikes, { ...fuseOptions, keys: ['title', 'description', 'category'] }), []);
-  const blogFuse = useMemo(() => new Fuse(blogPosts, { ...fuseOptions, keys: ['title', 'excerpt', 'category'] }), []);
-  const faqFuse = useMemo(() => new Fuse(faqs, { ...fuseOptions, keys: ['question', 'answer', 'category'] }), []);
-  const pageFuse = useMemo(() => new Fuse(sitePages, { ...fuseOptions, keys: ['title', 'id'] }), []);
 
   useEffect(() => { setMounted(true); }, []);
 
