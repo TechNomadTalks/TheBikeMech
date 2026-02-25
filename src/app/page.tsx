@@ -22,6 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { EventsCalendar } from "@/components/shared/events-calendar";
 
 // Services data
 const services = [
@@ -288,8 +289,29 @@ export default function HomePage() {
   return (
     <div className="relative">
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center px-4 lg:px-8">
-        <div className="container mx-auto text-center">
+      <section className="relative min-h-[90vh] flex items-center justify-center px-4 lg:px-8 overflow-hidden">
+        {/* Decorative Bike Graphics */}
+        <div className="absolute inset-0 pointer-events-none opacity-5">
+          <svg className="absolute left-10 top-1/4 w-32 h-32" viewBox="0 0 100 100" fill="none">
+            <circle cx="25" cy="65" r="15" stroke="currentColor" strokeWidth="3"/>
+            <circle cx="75" cy="65" r="15" stroke="currentColor" strokeWidth="3"/>
+            <path d="M25 50 L75 50 L65 30 L35 30 Z" stroke="currentColor" strokeWidth="3" fill="none"/>
+            <path d="M35 30 L25 65 M65 30 L75 65" stroke="currentColor" strokeWidth="2"/>
+          </svg>
+          <svg className="absolute right-10 bottom-1/4 w-40 h-40" viewBox="0 0 100 100" fill="none">
+            <circle cx="30" cy="60" r="18" stroke="currentColor" strokeWidth="3"/>
+            <circle cx="80" cy="60" r="18" stroke="currentColor" strokeWidth="3"/>
+            <path d="M30 42 L80 42 L70 25 L40 25 Z" stroke="currentColor" strokeWidth="3" fill="none"/>
+            <path d="M40 25 L30 60 M70 25 L80 60" stroke="currentColor" strokeWidth="2"/>
+            <circle cx="55" cy="42" r="8" stroke="currentColor" strokeWidth="2"/>
+          </svg>
+          <svg className="absolute left-1/4 bottom-20 w-24 h-24 opacity-30" viewBox="0 0 100 100" fill="none">
+            <path d="M20 80 L50 20 L80 80" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
+            <circle cx="50" cy="20" r="8" stroke="currentColor" strokeWidth="3"/>
+          </svg>
+        </div>
+        
+        <div className="container mx-auto text-center relative z-10">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -592,6 +614,30 @@ export default function HomePage() {
               </Button>
             </Link>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Events Calendar Section */}
+      <section className="py-20 px-4 lg:px-8 bg-white/[0.02]">
+        <div className="container mx-auto">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={stagger}
+            className="text-center mb-12"
+          >
+            <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Upcoming <span className="gradient-text">Events</span>
+            </motion.h2>
+            <motion.p variants={fadeInUp} className="text-zinc-400 max-w-2xl mx-auto">
+              Race events, group rides, and cycling adventures on the South Coast
+            </motion.p>
+          </motion.div>
+
+          <div className="max-w-4xl mx-auto">
+            <EventsCalendar />
+          </div>
         </div>
       </section>
 
