@@ -51,16 +51,6 @@ const services = [
   "Other",
 ];
 
-const businessHours = [
-  { day: "Monday", hours: "8:00 AM - 5:00 PM" },
-  { day: "Tuesday", hours: "8:00 AM - 5:00 PM" },
-  { day: "Wednesday", hours: "8:00 AM - 5:00 PM" },
-  { day: "Thursday", hours: "8:00 AM - 5:00 PM" },
-  { day: "Friday", hours: "8:00 AM - 5:00 PM" },
-  { day: "Saturday", hours: "8:00 AM - 1:00 PM" },
-  { day: "Sunday", hours: "Closed" },
-];
-
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
@@ -350,25 +340,24 @@ export default function ContactPage() {
             </Card>
 
             {/* Business Hours */}
-            <Card className="glass-card p-6 hidden md:block">
-              <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+            <Card className="glass-card p-6">
+              <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-[#22c55e]" />
                 Business Hours
               </h2>
-              <div className="space-y-3">
-                {businessHours.map((item) => (
-                  <div
-                    key={item.day}
-                    className={`flex justify-between items-center py-2 ${
-                      item.day !== "Sunday" ? "border-b border-white/5" : ""
-                    }`}
-                  >
-                    <span className="text-zinc-300">{item.day}</span>
-                    <span className={item.hours === "Closed" ? "text-zinc-500" : "text-white"}>
-                      {item.hours}
-                    </span>
-                  </div>
-                ))}
+              <div className="flex flex-wrap gap-4 md:gap-6 text-sm">
+                <div>
+                  <span className="text-zinc-400">Mon - Fri:</span>
+                  <span className="text-white ml-2">8:00 AM - 5:00 PM</span>
+                </div>
+                <div>
+                  <span className="text-zinc-400">Sat:</span>
+                  <span className="text-white ml-2">8:00 AM - 1:00 PM</span>
+                </div>
+                <div>
+                  <span className="text-zinc-400">Sun:</span>
+                  <span className="text-zinc-500 ml-2">Closed</span>
+                </div>
               </div>
             </Card>
 
@@ -381,65 +370,6 @@ export default function ContactPage() {
               <p className="text-zinc-400 mb-4">
                 67A Old St Faiths Road, Umtentweni, Hibiscus Coast, KwaZulu-Natal
               </p>
-              <div className="space-y-3 mb-4">
-                <a 
-                  href="https://en.wikipedia.org/wiki/Umtentweni" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="block p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <img 
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Umtentweni_Beach_View.jpg/320px-Umtentweni_Beach_View.jpg" 
-                      alt="Umtentweni Beach"
-                      className="w-16 h-12 object-cover rounded"
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                    />
-                    <div>
-                      <span className="text-white font-medium text-sm">Umtentweni Beach</span>
-                      <p className="text-zinc-500 text-xs">Popular beach destination on the South Coast</p>
-                    </div>
-                  </div>
-                </a>
-                <a 
-                  href="https://en.wikipedia.org/wiki/KwaZulu-Natal" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="block p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <img 
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Drakensberg_Mountains.jpg/320px-Drakensberg_Mountains.jpg" 
-                      alt="KwaZulu-Natal"
-                      className="w-16 h-12 object-cover rounded"
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                    />
-                    <div>
-                      <span className="text-white font-medium text-sm">KwaZulu-Natal</span>
-                      <p className="text-zinc-500 text-xs">Province known for beaches, mountains & wildlife</p>
-                    </div>
-                  </div>
-                </a>
-                <a 
-                  href="https://en.wikipedia.org/wiki/Hibiscus_Coast" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="block p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <img 
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Shelly_Beach_KZN.jpg/320px-Shelly_Beach_KZN.jpg" 
-                      alt="Hibiscus Coast"
-                      className="w-16 h-12 object-cover rounded"
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                    />
-                    <div>
-                      <span className="text-white font-medium text-sm">Hibiscus Coast</span>
-                      <p className="text-zinc-500 text-xs">Coastal municipality with beaches & golf courses</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
               <div className="aspect-video rounded-lg overflow-hidden">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3500!2d30.35!3d-30.95!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1eda43d3c1c1c1c1%3A0x1!2s67A%20Old%20St%20Faiths%20Road%2C%20Umtentweni%2C%20South%20Africa!5e0!3m2!1sen!2sza!4v1"
