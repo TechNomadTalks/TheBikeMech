@@ -22,7 +22,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { EventsCalendar } from "@/components/shared/events-calendar";
 
 // Services data
 const services = [
@@ -614,30 +613,6 @@ export default function HomePage() {
               </Button>
             </Link>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Events Calendar Section */}
-      <section className="py-20 px-4 lg:px-8 bg-white/[0.02]">
-        <div className="container mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-            className="text-center mb-12"
-          >
-            <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Upcoming <span className="gradient-text">Events</span>
-            </motion.h2>
-            <motion.p variants={fadeInUp} className="text-zinc-400 max-w-2xl mx-auto">
-              Race events, group rides, and cycling adventures on the South Coast
-            </motion.p>
-          </motion.div>
-
-          <div className="max-w-4xl mx-auto">
-            <EventsCalendar />
-          </div>
         </div>
       </section>
 
