@@ -181,17 +181,17 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold text-white mb-8 text-center">Meet the Team</h2>
           <div className={`grid grid-cols-1 ${team.length === 1 ? 'md:justify-center md:grid-cols-1' : 'md:grid-cols-3'} gap-6`}>
             {team.map((member, index) => (
-              <Card key={index} className="glass-card glass-card-hover p-6">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#22c55e] to-[#06b6d4] flex items-center justify-center mx-auto mb-4 text-black text-2xl font-bold">
+              <Card key={index} className="glass-card glass-card-hover p-4 md:p-6 max-w-sm mx-auto">
+                <div className="w-14 h-14 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-[#22c55e] to-[#06b6d4] flex items-center justify-center mx-auto mb-3 md:mb-4 text-black text-xl md:text-2xl font-bold">
                   {member.name.split(' ').map(n => n[0]).join('')}
                 </div>
                 <div className="text-center">
-                  <h3 className="text-lg font-semibold text-white">{member.name}</h3>
-                  <p className="text-[#22c55e] text-sm mb-3">{member.role}</p>
-                  <p className="text-zinc-400 text-sm mb-4">{member.bio}</p>
-                  <div className="flex flex-wrap gap-2 justify-center">
+                  <h3 className="text-base md:text-lg font-semibold text-white">{member.name}</h3>
+                  <p className="text-[#22c55e] text-xs md:text-sm mb-2 md:mb-3">{member.role}</p>
+                  <p className="text-zinc-400 text-xs md:text-sm mb-3 md:mb-4">{member.bio}</p>
+                  <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
                     {member.specialties.map((specialty) => (
-                      <Badge key={specialty} variant="outline" className="border-zinc-700 text-zinc-400 text-xs">
+                      <Badge key={specialty} variant="outline" className="border-zinc-700 text-zinc-400 text-[10px] md:text-xs">
                         {specialty}
                       </Badge>
                     ))}
