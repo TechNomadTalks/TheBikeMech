@@ -23,7 +23,7 @@ export default function EventsPage() {
           </p>
           
           <Link 
-            href="https://wa.me/27658218888?text=I want to learn more about your events" 
+            href="https://wa.me/27623235295?text=I want to learn more about your events" 
             target="_blank"
             rel="noopener noreferrer"
           >
