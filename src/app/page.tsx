@@ -271,24 +271,19 @@ export default function HomePage() {
   }, []);
 
   const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 3) % testimonials.length);
+    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
   };
 
   const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 3 + testimonials.length) % testimonials.length);
+    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
   const visibleTestimonials = () => {
-    const result = [];
-    for (let i = 0; i < 3; i++) {
-      const index = (currentTestimonial + i) % testimonials.length;
-      result.push(testimonials[index]);
-    }
-    return result;
+    return [testimonials[currentTestimonial]];
   };
 
-  const totalDots = Math.ceil(testimonials.length / 3);
-  const currentDot = Math.floor(currentTestimonial / 3);
+  const totalDots = testimonials.length;
+  const currentDot = currentTestimonial;
 
   return (
     <div className="relative">
@@ -430,44 +425,12 @@ export default function HomePage() {
           </motion.div>
 
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
-            {/* Service Expertise - Pie Chart */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="col-span-1"
-            >
-              <Card className="glass-card p-3 md:p-6">
-                <h3 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-4">Services</h3>
-                {/* Simple Pie Chart */}
-                <div className="flex items-center gap-4">
-                  <svg viewBox="0 0 100 100" className="w-24 h-24 md:w-32 md:h-32">
-                    {/* Repairs 45% - Green */}
-                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#22c55e" strokeWidth="20" strokeDasharray="125.6 251.2" strokeDashoffset="0" transform="rotate(-90 50 50)"/>
-                    {/* Service 30% - Pink - starts at 45% */}
-                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#ec4899" strokeWidth="20" strokeDasharray="83.7 251.2" strokeDashoffset="-125.6" transform="rotate(-90 50 50)"/>
-                    {/* Events 15% - Blue - starts at 75% */}
-                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#3b82f6" strokeWidth="20" strokeDasharray="41.9 251.2" strokeDashoffset="-209.3" transform="rotate(-90 50 50)"/>
-                    {/* Custom 10% - Orange - starts at 90% */}
-                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#f97316" strokeWidth="20" strokeDasharray="27.9 251.2" strokeDashoffset="-251.2" transform="rotate(-90 50 50)"/>
-                  </svg>
-                  <div className="flex-1 space-y-1 text-xs">
-                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-[#22c55e]"></span>Repairs 45%</div>
-                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-[#ec4899]"></span>Service 30%</div>
-                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-[#3b82f6]"></span>Events 15%</div>
-                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-[#f97316]"></span>Custom 10%</div>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-
             {/* Customer Satisfaction */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.1 }}
             >
               <Card className="glass-card p-3 md:p-6">
                 <h3 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-6">Satisfaction</h3>
@@ -496,37 +459,6 @@ export default function HomePage() {
                       <div className="text-xs text-zinc-500">10%</div>
                     </div>
                   </div>
-                </div>
-              </Card>
-            </motion.div>
-
-            {/* Service Breakdown */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="col-span-1"
-            >
-              <Card className="glass-card p-3 md:p-6">
-                <h3 className="text-sm md:text-lg font-semibold text-white mb-2 md:mb-4">Services</h3>
-                <div className="space-y-3">
-                  {[
-                    { label: 'Repairs', percent: '45%', color: 'bg-[#22c55e]' },
-                    { label: 'Service', percent: '30%', color: 'bg-[#ec4899]' },
-                    { label: 'Events', percent: '15%', color: 'bg-[#3b82f6]' },
-                    { label: 'Custom Builds', percent: '10%', color: 'bg-[#f97316]' },
-                  ].map((item) => (
-                    <div key={item.label} className="relative">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-zinc-300 text-sm">{item.label}</span>
-                        <span className="text-[#22c55e] text-xs font-bold">{item.percent}</span>
-                      </div>
-                      <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div className={`h-full ${item.color} rounded-full`} style={{ width: item.percent }} />
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </Card>
             </motion.div>
@@ -588,7 +520,7 @@ export default function HomePage() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service, index) => {
+            {services.slice(0, 3).map((service, index) => {
               const Icon = service.icon;
               return (
                 <motion.div
@@ -676,18 +608,18 @@ export default function HomePage() {
             </div>
 
             {/* Navigation arrows */}
-            <div className="flex justify-center gap-4 mt-8">
+            <div className="flex justify-center gap-4 mt-4 md:mt-8">
               <button
                 onClick={prevTestimonial}
                 className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
-                aria-label="Previous testimonials"
+                aria-label="Previous testimonial"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={nextTestimonial}
                 className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
-                aria-label="Next testimonials"
+                aria-label="Next testimonial"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -698,13 +630,13 @@ export default function HomePage() {
               {Array.from({ length: totalDots }).map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => setCurrentTestimonial(index * 3)}
+                  onClick={() => setCurrentTestimonial(index)}
                   className={`w-2 h-2 rounded-full transition-all ${
                     index === currentDot
                       ? "bg-[#22c55e] w-6"
                       : "bg-white/20 hover:bg-white/40"
                   }`}
-                  aria-label={`Go to testimonials ${index * 3 + 1}-${index * 3 + 3}`}
+                  aria-label={`Go to testimonial ${index + 1}`}
                 />
               ))}
             </div>

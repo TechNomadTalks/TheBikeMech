@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Fuse from "fuse.js";
 import { 
   Calendar, 
   Clock, 
@@ -15,71 +14,72 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { getBlogPosts, type SanityBlogPost } from "@/sanity/lib/blog";
 
-const blogPosts = [
+const defaultPosts = [
   {
     id: 1,
-    slug: "maintaining-your-bike-chain",
+    slug: { current: "maintaining-your-bike-chain" },
     title: "Maintaining Your Bike Chain: A Complete Guide",
     excerpt: "Learn how to properly clean, lubricate, and maintain your bike chain for optimal performance and longevity. A well-maintained chain can last thousands of kilometers.",
     category: "Maintenance Tips",
     author: "The Bike Mech",
-    date: "2024-01-15",
+    publishedAt: "2024-01-15",
     readTime: "5 min read",
     featured: true,
   },
   {
     id: 2,
-    slug: "when-to-replace-brake-pads",
+    slug: { current: "when-to-replace-brake-pads" },
     title: "When to Replace Your Brake Pads",
     excerpt: "Knowing when to replace your brake pads is crucial for safety. This guide covers signs of wear, types of brake pads, and replacement intervals for different riding conditions.",
     category: "Safety",
     author: "The Bike Mech",
-    date: "2024-01-10",
+    publishedAt: "2024-01-10",
     readTime: "4 min read",
     featured: false,
   },
   {
     id: 3,
-    slug: "winter-riding-tips",
+    slug: { current: "winter-riding-tips" },
     title: "Winter Riding Tips for South African Cyclists",
     excerpt: "Don't let the cold stop you from riding! Here are our top tips for staying comfortable and safe during winter rides, including gear recommendations and maintenance advice.",
     category: "Tips & Tricks",
     author: "The Bike Mech",
-    date: "2024-01-05",
+    publishedAt: "2024-01-05",
     readTime: "6 min read",
     featured: false,
   },
   {
     id: 4,
-    slug: "choosing-right-bike-size",
+    slug: { current: "choosing-right-bike-size" },
     title: "How to Choose the Right Bike Size",
     excerpt: "Buying a new bike? Getting the right size is essential for comfort and performance. Learn how to measure yourself and find the perfect fit for any type of bike.",
     category: "Buying Guides",
     author: "The Bike Mech",
-    date: "2023-12-28",
+    publishedAt: "2023-12-28",
     readTime: "7 min read",
     featured: false,
   },
   {
     id: 5,
-    slug: "tubeless-tyres-guide",
+    slug: { current: "tubeless-tyres-guide" },
     title: "The Complete Guide to Tubeless Tyres",
     excerpt: "Thinking about going tubeless? This comprehensive guide covers everything you need to know about tubeless tyres, including setup, maintenance, and troubleshooting common issues.",
     category: "Technical",
     author: "The Bike Mech",
-    date: "2023-12-20",
+    publishedAt: "2023-12-20",
     readTime: "8 min read",
     featured: true,
   },
   {
     id: 6,
-    slug: "basic-bike-tools-every-cyclist-needs",
+    slug: { current: "basic-bike-tools-every-cyclist-needs" },
     title: "Basic Bike Tools Every Cyclist Should Own",
     excerpt: "Be prepared for roadside repairs and basic maintenance with these essential tools. From multi-tools to floor pumps, here's what every cyclist should have in their toolkit.",
     category: "Maintenance Tips",
     author: "The Bike Mech",
-    date: "2023-12-15",
+    publishedAt: "2023-12-15",
     readTime: "5 min read",
     featured: false,
   },
@@ -92,14 +92,46 @@ const fadeInUp = {
 
 export default function BlogPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  
-  const fuse = useMemo(() => new Fuse(blogPosts, {
-    keys: ['title', 'excerpt', 'category'],
-    threshold: 0.3,
-  }), [blogPosts]);
+  const [blogPosts, setBlogPosts] = useState<any[]>(defaultPosts);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const posts = await getBlogPosts();
+        if (posts && posts.length > 0) {
+          setBlogPosts(posts.map((p: SanityBlogPost) => ({
+            id: p._id,
+            slug: p.slug,
+            title: p.title,
+            excerpt: p.excerpt,
+            category: p.category,
+            author: p.author,
+            publishedAt: p.publishedAt,
+            readTime: p.readTime,
+            featured: p.featured,
+          })));
+        }
+      } catch (error) {
+        console.error('Failed to fetch blog posts from Sanity:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPosts();
+  }, []);
+
+  const simpleSearch = (items: any[], term: string): any[] => {
+    const lowerTerm = term.toLowerCase();
+    return items.filter(item => 
+      item.title?.toLowerCase().includes(lowerTerm) ||
+      item.excerpt?.toLowerCase().includes(lowerTerm) ||
+      item.category?.toLowerCase().includes(lowerTerm)
+    );
+  };
 
   const filteredPosts = searchQuery 
-    ? fuse.search(searchQuery).map(result => result.item)
+    ? simpleSearch(blogPosts, searchQuery)
     : blogPosts;
 
   const featuredPosts = filteredPosts.filter((post) => post.featured);
@@ -173,7 +205,7 @@ export default function BlogPage() {
                         <div className="flex items-center gap-4">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
-                            {new Date(post.date).toLocaleDateString("en-ZA", {
+                            {new Date(post.publishedAt).toLocaleDateString("en-ZA", {
                               day: "numeric",
                               month: "short",
                               year: "numeric",
@@ -198,14 +230,36 @@ export default function BlogPage() {
         )}
 
         {/* All Posts */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <h2 className="text-xl font-semibold text-white mb-6">All Articles</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogPosts.map((post, index) => (
+        {loading ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <h2 className="text-xl font-semibold text-white mb-6">All Articles</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Card key={i} className="glass-card overflow-hidden h-full">
+                  <div className="aspect-video animate-pulse bg-white/5"></div>
+                  <div className="p-5">
+                    <div className="h-4 bg-white/10 rounded w-1/4 mb-2"></div>
+                    <div className="h-5 bg-white/10 rounded w-3/4 mb-2"></div>
+                    <div className="h-4 bg-white/10 rounded w-full mb-2"></div>
+                    <div className="h-4 bg-white/10 rounded w-1/2"></div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <h2 className="text-xl font-semibold text-white mb-6">All Articles</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {blogPosts.map((post, index) => (
               <motion.div
                 key={post.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -225,7 +279,7 @@ export default function BlogPage() {
                     <div className="flex items-center justify-between text-xs text-zinc-500">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
-                        {new Date(post.date).toLocaleDateString("en-ZA", {
+                        {new Date(post.publishedAt).toLocaleDateString("en-ZA", {
                           day: "numeric",
                           month: "short",
                         })}
@@ -238,6 +292,7 @@ export default function BlogPage() {
             ))}
           </div>
         </motion.div>
+        )}
 
         {/* Newsletter CTA */}
         <motion.div

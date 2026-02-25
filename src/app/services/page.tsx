@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { 
@@ -17,13 +17,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { getServices, type SanityService } from "@/sanity/lib/services";
 
-const allServices = [
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  settings: Settings,
+  wrench: Wrench,
+  cog: Cog,
+  zap: Zap,
+  bike: Bike,
+};
+
+const defaultServices = [
   {
     id: "tune-up",
     name: "Basic Tune-Up",
     price: 350,
-    icon: Settings,
+    icon: "settings",
     description: "Complete bike adjustment and safety check to ensure optimal performance.",
     features: [
       "Brake adjustment and inspection",
@@ -34,12 +43,13 @@ const allServices = [
       "Safety inspection",
     ],
     popular: true,
+    fromPrice: false,
   },
   {
     id: "full-service",
     name: "Full Service",
     price: 650,
-    icon: Wrench,
+    icon: "wrench",
     description: "Comprehensive overhaul with all adjustments and detailed component check.",
     features: [
       "Everything in Basic Tune-Up",
@@ -51,12 +61,13 @@ const allServices = [
       "Detailed report",
     ],
     popular: true,
+    fromPrice: false,
   },
   {
     id: "brake",
     name: "Brake Adjustment",
     price: 200,
-    icon: Cog,
+    icon: "cog",
     description: "Professional brake calibration and pad replacement for safe stopping.",
     features: [
       "Brake pad inspection",
@@ -66,12 +77,13 @@ const allServices = [
       "Safety test",
     ],
     popular: false,
+    fromPrice: false,
   },
   {
     id: "gear",
     name: "Gear Tuning",
     price: 250,
-    icon: Settings,
+    icon: "settings",
     description: "Precise derailleur adjustment and cable tension for smooth shifting.",
     features: [
       "Front derailleur adjustment",
@@ -81,12 +93,13 @@ const allServices = [
       "Shift testing",
     ],
     popular: false,
+    fromPrice: false,
   },
   {
     id: "chain",
     name: "Chain Replacement",
     price: 150,
-    icon: Zap,
+    icon: "zap",
     description: "New chain installation with proper sizing and lubrication.",
     features: [
       "Chain wear measurement",
@@ -96,12 +109,13 @@ const allServices = [
       "Drivetrain check",
     ],
     popular: false,
+    fromPrice: false,
   },
   {
     id: "tube",
     name: "Tube/Tyre Repair",
     price: 100,
-    icon: Bike,
+    icon: "bike",
     description: "Puncture repair or tube replacement to get you rolling again.",
     features: [
       "Puncture location",
@@ -111,12 +125,13 @@ const allServices = [
       "Rim check",
     ],
     popular: false,
+    fromPrice: false,
   },
   {
     id: "cable",
     name: "Cable Replacement",
     price: 180,
-    icon: Zap,
+    icon: "zap",
     description: "Complete cable and housing replacement for smooth operation.",
     features: [
       "Brake cable replacement",
@@ -126,12 +141,13 @@ const allServices = [
       "Tension adjustment",
     ],
     popular: false,
+    fromPrice: false,
   },
   {
     id: "bottom-bracket",
     name: "Bottom Bracket Service",
     price: 400,
-    icon: Cog,
+    icon: "cog",
     description: "Bottom bracket removal, cleaning, and reinstallation or replacement.",
     features: [
       "Removal and inspection",
@@ -141,12 +157,13 @@ const allServices = [
       "Crank reinstallation",
     ],
     popular: false,
+    fromPrice: false,
   },
   {
     id: "custom",
     name: "Custom Build",
     price: 5000,
-    icon: Wrench,
+    icon: "wrench",
     description: "Full custom bike build from frame up with your chosen components.",
     features: [
       "Frame preparation",
@@ -163,7 +180,7 @@ const allServices = [
     id: "emergency",
     name: "Emergency Repair",
     price: 300,
-    icon: AlertTriangle,
+    icon: "alerttriangle",
     description: "Urgent repairs when you need them most. Quick turnaround guaranteed.",
     features: [
       "Priority service",
@@ -173,6 +190,7 @@ const allServices = [
       "Mobile service available",
     ],
     popular: false,
+    fromPrice: false,
   },
 ];
 
@@ -192,6 +210,33 @@ const stagger = {
 export default function ServicesPage() {
   const [showPopular, setShowPopular] = useState(false);
   const [priceFilter, setPriceFilter] = useState<string>("all");
+  const [services, setServices] = useState<any[]>(defaultServices);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchServices() {
+      try {
+        const sanityServices = await getServices();
+        if (sanityServices && sanityServices.length > 0) {
+          setServices(sanityServices.map((s: SanityService) => ({
+            id: s._id,
+            name: s.name,
+            price: s.price,
+            icon: s.icon || 'settings',
+            description: s.description,
+            features: s.features || [],
+            popular: s.popular || false,
+            fromPrice: s.fromPrice || false,
+          })));
+        }
+      } catch (error) {
+        console.error('Failed to fetch services from Sanity:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchServices();
+  }, []);
 
   const priceRanges = [
     { value: "all", label: "All Prices" },
@@ -200,7 +245,7 @@ export default function ServicesPage() {
     { value: "over400", label: "Over R400" },
   ];
 
-  const filteredServices = allServices.filter(service => {
+  const filteredServices = services.filter(service => {
     if (priceFilter === "all") return true;
     if (priceFilter === "under200") return service.price < 200;
     if (priceFilter === "200to400") return service.price >= 200 && service.price <= 400;
@@ -269,10 +314,25 @@ export default function ServicesPage() {
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {displayedServices.map((service, index) => {
-            const Icon = service.icon;
-            return (
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <Card key={i} className="glass-card p-4 md:p-6 h-full">
+                <div className="animate-pulse">
+                  <div className="w-14 h-14 rounded-xl bg-white/10 mb-4"></div>
+                  <div className="h-6 bg-white/10 rounded mb-2"></div>
+                  <div className="h-4 bg-white/10 rounded w-1/2 mb-4"></div>
+                  <div className="h-4 bg-white/10 rounded mb-2"></div>
+                  <div className="h-4 bg-white/10 rounded mb-2"></div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12">
+            {displayedServices.map((service, index) => {
+              const Icon = iconMap[service.icon] || Settings;
+              return (
               <motion.div
                 key={service.id}
                 id={service.id}
@@ -320,6 +380,7 @@ export default function ServicesPage() {
             );
           })}
         </div>
+        )}
 
         {/* CTA Section */}
         <motion.div

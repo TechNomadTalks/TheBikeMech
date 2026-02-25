@@ -350,7 +350,7 @@ export default function ContactPage() {
             </Card>
 
             {/* Business Hours */}
-            <Card className="glass-card p-6">
+            <Card className="glass-card p-6 hidden md:block">
               <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-[#22c55e]" />
                 Business Hours

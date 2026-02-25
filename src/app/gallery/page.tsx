@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   X, 
@@ -16,10 +16,11 @@ import {
   Dialog,
   DialogContent,
 } from "@/components/ui/dialog";
+import { getGalleryImages, type SanityGalleryImage } from "@/sanity/lib/gallery";
 
 const categories = ["All", "Repairs", "Custom Builds", "Before & After", "Shop", "Events"];
 
-const galleryImages = [
+const defaultImages = [
   {
     id: 1,
     title: "Full Suspension Overhaul",
@@ -96,6 +97,30 @@ export default function GalleryPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [galleryImages, setGalleryImages] = useState<any[]>(defaultImages);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchGallery() {
+      try {
+        const images = await getGalleryImages();
+        if (images && images.length > 0) {
+          setGalleryImages(images.map((img: SanityGalleryImage) => ({
+            id: img._id,
+            title: img.title,
+            category: img.category,
+            description: img.description,
+            image: img.imageUrl || null,
+          })));
+        }
+      } catch (error) {
+        console.error('Failed to fetch gallery from Sanity:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchGallery();
+  }, []);
 
   const filteredImages = selectedCategory === "All"
     ? galleryImages
@@ -163,45 +188,64 @@ export default function GalleryPage() {
         </motion.div>
 
         {/* Gallery Grid */}
-        <motion.div 
-          layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredImages.map((image, index) => (
-              <motion.div
-                key={image.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Card
-                  className="glass-card glass-card-hover overflow-hidden cursor-pointer group"
-                  onClick={() => openLightbox(index)}
-                >
-                  <div className="aspect-square relative">
-                    <img 
-                      src={image.image} 
-                      alt={image.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <span className="text-white text-sm">View Image</span>
-                    </div>
-                    <Badge className="absolute bottom-3 left-3 bg-black/60 text-white text-xs">
-                      {image.category}
-                    </Badge>
-                  </div>
-                  <div className="p-3">
-                    <h3 className="font-medium text-white text-sm">{image.title}</h3>
-                  </div>
-                </Card>
-              </motion.div>
+        {loading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <Card key={i} className="glass-card overflow-hidden">
+                <div className="aspect-square animate-pulse bg-white/5"></div>
+                <div className="p-3">
+                  <div className="h-4 bg-white/10 rounded w-3/4"></div>
+                </div>
+              </Card>
             ))}
-          </AnimatePresence>
-        </motion.div>
+          </div>
+        ) : (
+          <motion.div 
+            layout
+            className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4"
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredImages.map((image, index) => (
+                <motion.div
+                  key={image.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card
+                    className="glass-card glass-card-hover overflow-hidden cursor-pointer group"
+                    onClick={() => openLightbox(index)}
+                  >
+                    <div className="aspect-square relative">
+                      {image.image ? (
+                        <img 
+                          src={image.image} 
+                          alt={image.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                          <Camera className="w-12 h-12 text-zinc-600" />
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span className="text-white text-sm">View Image</span>
+                      </div>
+                      <Badge className="absolute bottom-3 left-3 bg-black/60 text-white text-xs">
+                        {image.category}
+                      </Badge>
+                    </div>
+                    <div className="p-3">
+                      <h3 className="font-medium text-white text-sm">{image.title}</h3>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
 
         {/* Lightbox */}
         <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
@@ -229,11 +273,19 @@ export default function GalleryPage() {
                 <ChevronRight className="w-6 h-6" />
               </button>
 
-              {/* Image placeholder */}
+              {/* Image */}
               <div className="aspect-video image-placeholder bg-zinc-900">
-                <div className="h-full flex items-center justify-center">
-                  <Camera className="w-16 h-16 text-zinc-600" />
-                </div>
+                {filteredImages[currentImageIndex]?.image ? (
+                  <img 
+                    src={filteredImages[currentImageIndex].image} 
+                    alt={filteredImages[currentImageIndex]?.title}
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <div className="h-full flex items-center justify-center">
+                    <Camera className="w-16 h-16 text-zinc-600" />
+                  </div>
+                )}
               </div>
 
               {/* Image info */}
