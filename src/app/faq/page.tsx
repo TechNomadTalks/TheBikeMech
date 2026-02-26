@@ -15,23 +15,15 @@ import { Button } from "@/components/ui/button";
 
 const faqCategories = [
   {
-    category: "Services & Pricing",
+    category: "Services",
     questions: [
       {
-        question: "How much does a basic tune-up cost?",
-        answer: "Our basic tune-up service costs R350 and includes brake adjustment, gear indexing, chain lubrication, tyre pressure check, bolt torque check, and a complete safety inspection. This is perfect for regular maintenance to keep your bike running smoothly.",
-      },
-      {
-        question: "What's included in a full service?",
-        answer: "Our full service at R650 includes everything in the basic tune-up plus drivetrain deep cleaning, bottom bracket check, headset adjustment, wheel trueing, cable inspection, and a detailed report of your bike's condition. This comprehensive service is recommended annually or every 3000km.",
-      },
-      {
-        question: "Do you offer emergency repairs?",
-        answer: "Yes! We offer emergency repair services for R300. This includes priority service, quick diagnosis, and same-day repair when possible. We understand that sometimes you need your bike fixed urgently, especially if you rely on it for commuting.",
+        question: "What services do you offer?",
+        answer: "We offer a complete range of bicycle repair and maintenance services including basic tune-ups, full services, brake adjustments, gear tuning, chain replacements, tube/tyres repairs, cable replacements, bottom bracket services, and emergency repairs.",
       },
       {
         question: "How long does a typical service take?",
-        answer: "A basic tune-up typically takes 1-2 hours, while a full service can take 3-4 hours depending on the bike's condition. We'll always give you an estimated completion time when you book. For complex repairs or custom builds, we'll provide a detailed timeline upfront.",
+        answer: "A basic tune-up typically takes 1-2 hours, while a full service can take 3-4 hours depending on the bike's condition. We'll always give you an estimated completion time when you book.",
       },
     ],
   },
@@ -40,7 +32,7 @@ const faqCategories = [
     questions: [
       {
         question: "How do I book a service?",
-        answer: "You can book a service through our contact form, by calling us at +27 62 323 5295, or by messaging us on WhatsApp. We recommend booking in advance, especially during peak seasons, but we always try to accommodate urgent repairs.",
+        answer: "You can book a service through our contact form, by calling us at +27 62 323 5295, or by messaging us on WhatsApp. We recommend booking in advance, especially during peak seasons.",
       },
       {
         question: "Do I need to leave my bike with you?",
@@ -48,7 +40,7 @@ const faqCategories = [
       },
       {
         question: "Can I bring my own parts?",
-        answer: "Absolutely! If you've purchased parts elsewhere, we're happy to install them for you. Just let us know when booking so we can allocate the appropriate time. Labour charges will still apply based on the complexity of the installation.",
+        answer: "Absolutely! If you've purchased parts elsewhere, we're happy to install them for you. Just let us know when booking so we can allocate the appropriate time.",
       },
       {
         question: "What are your operating hours?",

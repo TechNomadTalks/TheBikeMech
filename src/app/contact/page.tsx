@@ -38,16 +38,15 @@ const Calendar = dynamic(() => import("@/components/ui/calendar").then(mod => ({
 });
 
 const services = [
-  "Basic Tune-Up (R350)",
-  "Full Service (R650)",
-  "Brake Adjustment (R200)",
-  "Gear Tuning (R250)",
-  "Chain Replacement (R150)",
-  "Tube/Tyre Repair (R100)",
-  "Cable Replacement (R180)",
-  "Bottom Bracket Service (R400)",
-  "Custom Build (From R5000)",
-  "Emergency Repair (R300)",
+  "Basic Tune-Up",
+  "Full Service",
+  "Brake Adjustment",
+  "Gear Tuning",
+  "Chain Replacement",
+  "Tube/Tyre Repair",
+  "Cable Replacement",
+  "Bottom Bracket Service",
+  "Emergency Repair",
   "Other",
 ];
 
@@ -325,7 +324,7 @@ export default function ContactPage() {
                 </a>
 
                 <a
-                  href="mailto:info@thebikemech.co.za"
+                  href="mailto:thebikemechinfo@gmail.com"
                   className="flex items-center gap-4 p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
                 >
                   <div className="w-12 h-12 rounded-full bg-[#06b6d4]/20 flex items-center justify-center">
@@ -333,7 +332,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="text-white font-medium">Email Us</p>
-                    <p className="text-zinc-400 text-sm">info@thebikemech.co.za</p>
+                    <p className="text-zinc-400 text-sm">thebikemechinfo@gmail.com</p>
                   </div>
                 </a>
               </div>

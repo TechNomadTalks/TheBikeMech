@@ -7,7 +7,6 @@ import {
   Settings, 
   Wrench, 
   Cog, 
-  Zap, 
   Bike, 
   AlertTriangle,
   ArrowRight,
@@ -23,7 +22,6 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   settings: Settings,
   wrench: Wrench,
   cog: Cog,
-  zap: Zap,
   bike: Bike,
 };
 
@@ -31,7 +29,6 @@ const defaultServices = [
   {
     id: "tune-up",
     name: "Basic Tune-Up",
-    price: 350,
     icon: "settings",
     description: "Complete bike adjustment and safety check to ensure optimal performance.",
     features: [
@@ -43,12 +40,10 @@ const defaultServices = [
       "Safety inspection",
     ],
     popular: true,
-    fromPrice: false,
   },
   {
     id: "full-service",
     name: "Full Service",
-    price: 650,
     icon: "wrench",
     description: "Comprehensive overhaul with all adjustments and detailed component check.",
     features: [
@@ -61,12 +56,10 @@ const defaultServices = [
       "Detailed report",
     ],
     popular: true,
-    fromPrice: false,
   },
   {
     id: "brake",
     name: "Brake Adjustment",
-    price: 200,
     icon: "cog",
     description: "Professional brake calibration and pad replacement for safe stopping.",
     features: [
@@ -77,12 +70,10 @@ const defaultServices = [
       "Safety test",
     ],
     popular: false,
-    fromPrice: false,
   },
   {
     id: "gear",
     name: "Gear Tuning",
-    price: 250,
     icon: "settings",
     description: "Precise derailleur adjustment and cable tension for smooth shifting.",
     features: [
@@ -93,13 +84,11 @@ const defaultServices = [
       "Shift testing",
     ],
     popular: false,
-    fromPrice: false,
   },
   {
     id: "chain",
     name: "Chain Replacement",
-    price: 150,
-    icon: "zap",
+    icon: "cog",
     description: "New chain installation with proper sizing and lubrication.",
     features: [
       "Chain wear measurement",
@@ -109,12 +98,10 @@ const defaultServices = [
       "Drivetrain check",
     ],
     popular: false,
-    fromPrice: false,
   },
   {
     id: "tube",
     name: "Tube/Tyre Repair",
-    price: 100,
     icon: "bike",
     description: "Puncture repair or tube replacement to get you rolling again.",
     features: [
@@ -125,13 +112,11 @@ const defaultServices = [
       "Rim check",
     ],
     popular: false,
-    fromPrice: false,
   },
   {
     id: "cable",
     name: "Cable Replacement",
-    price: 180,
-    icon: "zap",
+    icon: "cog",
     description: "Complete cable and housing replacement for smooth operation.",
     features: [
       "Brake cable replacement",
@@ -141,12 +126,10 @@ const defaultServices = [
       "Tension adjustment",
     ],
     popular: false,
-    fromPrice: false,
   },
   {
     id: "bottom-bracket",
     name: "Bottom Bracket Service",
-    price: 400,
     icon: "cog",
     description: "Bottom bracket removal, cleaning, and reinstallation or replacement.",
     features: [
@@ -157,29 +140,10 @@ const defaultServices = [
       "Crank reinstallation",
     ],
     popular: false,
-    fromPrice: false,
-  },
-  {
-    id: "custom",
-    name: "Custom Build",
-    price: 5000,
-    icon: "wrench",
-    description: "Full custom bike build from frame up with your chosen components.",
-    features: [
-      "Frame preparation",
-      "Component installation",
-      "Cable routing",
-      "Full adjustment",
-      "Test ride",
-      "Warranty support",
-    ],
-    popular: true,
-    fromPrice: true,
   },
   {
     id: "emergency",
     name: "Emergency Repair",
-    price: 300,
     icon: "alerttriangle",
     description: "Urgent repairs when you need them most. Quick turnaround guaranteed.",
     features: [
@@ -190,7 +154,6 @@ const defaultServices = [
       "Mobile service available",
     ],
     popular: false,
-    fromPrice: false,
   },
 ];
 
@@ -209,7 +172,6 @@ const stagger = {
 
 export default function ServicesPage() {
   const [showPopular, setShowPopular] = useState(false);
-  const [priceFilter, setPriceFilter] = useState<string>("all");
   const [services, setServices] = useState<any[]>(defaultServices);
   const [loading, setLoading] = useState(true);
 
@@ -221,12 +183,10 @@ export default function ServicesPage() {
           setServices(sanityServices.map((s: SanityService) => ({
             id: s._id,
             name: s.name,
-            price: s.price,
             icon: s.icon || 'settings',
             description: s.description,
             features: s.features || [],
             popular: s.popular || false,
-            fromPrice: s.fromPrice || false,
           })));
         }
       } catch (error) {
@@ -238,18 +198,8 @@ export default function ServicesPage() {
     fetchServices();
   }, []);
 
-  const priceRanges = [
-    { value: "all", label: "All Prices" },
-    { value: "under200", label: "Under R200" },
-    { value: "200to400", label: "R200 - R400" },
-    { value: "over400", label: "Over R400" },
-  ];
-
   const filteredServices = services.filter(service => {
-    if (priceFilter === "all") return true;
-    if (priceFilter === "under200") return service.price < 200;
-    if (priceFilter === "200to400") return service.price >= 200 && service.price <= 400;
-    if (priceFilter === "over400") return service.price > 400;
+    if (showPopular) return service.popular;
     return true;
   });
 
@@ -282,8 +232,8 @@ export default function ServicesPage() {
             variants={fadeInUp}
             className="text-zinc-400 max-w-2xl mx-auto"
           >
-            From basic tune-ups to custom builds, we offer a complete range of 
-            bicycle repair and maintenance services at competitive prices.
+            From basic tune-ups to complete overhauls, we offer a complete range of 
+            bicycle repair and maintenance services.
           </motion.p>
         </motion.div>
 
@@ -297,20 +247,6 @@ export default function ServicesPage() {
             <Flame className="w-4 h-4" />
             {showPopular ? "Popular" : "Popular"}
           </Button>
-          
-          <div className="flex gap-2">
-            {priceRanges.map((range) => (
-              <Button
-                key={range.value}
-                variant={priceFilter === range.value ? "default" : "outline"}
-                size="sm"
-                onClick={() => setPriceFilter(range.value)}
-                className={priceFilter === range.value ? "btn-primary" : "btn-secondary"}
-              >
-                {range.label}
-              </Button>
-            ))}
-          </div>
         </div>
 
         {/* Services Grid */}
@@ -353,9 +289,6 @@ export default function ServicesPage() {
                     </div>
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold text-white mb-1">{service.name}</h3>
-                      <p className="text-[#22c55e] font-bold text-2xl">
-                        {service.fromPrice ? "From " : ""}R{service.price}
-                      </p>
                     </div>
                   </div>
 

@@ -202,27 +202,6 @@ export default function AboutPage() {
           </div>
         </motion.div>
 
-        {/* Certifications */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="mb-16"
-        >
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <Award className="w-6 h-6 text-[#22c55e]" />
-            <h2 className="text-2xl font-bold text-white">Certifications & Training</h2>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {certifications.map((cert, index) => (
-              <Card key={index} className="glass-card p-4 text-center">
-                <CheckCircle2 className="w-6 h-6 text-[#22c55e] mx-auto mb-2" />
-                <p className="text-zinc-300 text-sm">{cert}</p>
-              </Card>
-            ))}
-          </div>
-        </motion.div>
-
         {/* Service Area */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

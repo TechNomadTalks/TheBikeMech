@@ -28,44 +28,20 @@ const services = [
   {
     id: "tune-up",
     name: "Basic Tune-Up",
-    price: 350,
     icon: Settings,
     description: "Complete bike adjustment and safety check",
   },
   {
     id: "full-service",
     name: "Full Service",
-    price: 650,
     icon: Wrench,
     description: "Comprehensive overhaul with all adjustments",
   },
   {
     id: "brake",
     name: "Brake Adjustment",
-    price: 200,
     icon: Cog,
     description: "Brake calibration and pad replacement",
-  },
-  {
-    id: "gear",
-    name: "Gear Tuning",
-    price: 250,
-    icon: Settings,
-    description: "Derailleur adjustment and cable tension",
-  },
-  {
-    id: "chain",
-    name: "Chain Replacement",
-    price: 150,
-    icon: Zap,
-    description: "New chain installation and sizing",
-  },
-  {
-    id: "tube",
-    name: "Tube/Tyre Repair",
-    price: 100,
-    icon: Bike,
-    description: "Puncture repair or tube replacement",
   },
 ];
 
@@ -604,8 +580,7 @@ export default function HomePage() {
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold text-white mb-1">{service.name}</h3>
-                        <p className="text-zinc-400 text-sm mb-3">{service.description}</p>
-                        <p className="text-[#22c55e] font-bold">R{service.price}</p>
+                        <p className="text-zinc-400 text-sm">{service.description}</p>
                       </div>
                     </div>
                   </Card>

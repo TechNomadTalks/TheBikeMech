@@ -79,10 +79,9 @@ const blogPosts = [
 ];
 
 const faqs = [
-  { question: "How much does a basic tune-up cost?", answer: "Our basic tune-up service costs R350", category: "Services" },
-  { question: "What's included in a full service?", answer: "Our full service at R650 includes everything in the basic tune-up", category: "Services" },
-  { question: "Do you offer emergency repairs?", answer: "Yes! We offer emergency repair services for R300", category: "Services" },
-  { question: "How long does a typical service take?", answer: "A basic tune-up typically takes 1-2 hours", category: "Services" },
+  { question: "What services do you offer?", answer: "We offer basic tune-ups, full services, brake adjustments, gear tuning, chain replacements, tube/tyres repairs, and more.", category: "Services" },
+  { question: "How long does a typical service take?", answer: "A basic tune-up typically takes 1-2 hours, full service 3-4 hours", category: "Services" },
+  { question: "Do you offer emergency repairs?", answer: "Yes! We offer emergency repair services for urgent situations", category: "Services" },
   { question: "How do I book a service?", answer: "You can book a service through our contact form", category: "Booking" },
   { question: "Do I need to leave my bike with you?", answer: "For most services, yes, you'll need to leave your bike", category: "Booking" },
   { question: "Can I bring my own parts?", answer: "Absolutely! If you've purchased parts elsewhere", category: "Booking" },
