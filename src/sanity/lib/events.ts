@@ -11,7 +11,7 @@ export interface SanityEvent {
   website: string;
   entryFee?: string;
   distance?: string;
-  categories?: string;
+  categories?: string[];
   image?: any;
   active: boolean;
 }

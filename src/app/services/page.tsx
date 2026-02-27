@@ -25,138 +25,6 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   bike: Bike,
 };
 
-const defaultServices = [
-  {
-    id: "tune-up",
-    name: "Basic Tune-Up",
-    icon: "settings",
-    description: "Complete bike adjustment and safety check to ensure optimal performance.",
-    features: [
-      "Brake adjustment and inspection",
-      "Gear indexing and tuning",
-      "Chain lubrication",
-      "Tyre pressure check",
-      "Bolt torque check",
-      "Safety inspection",
-    ],
-    popular: true,
-  },
-  {
-    id: "full-service",
-    name: "Full Service",
-    icon: "wrench",
-    description: "Comprehensive overhaul with all adjustments and detailed component check.",
-    features: [
-      "Everything in Basic Tune-Up",
-      "Drivetrain deep clean",
-      "Bottom bracket check",
-      "Headset adjustment",
-      "Wheel trueing",
-      "Cable inspection",
-      "Detailed report",
-    ],
-    popular: true,
-  },
-  {
-    id: "brake",
-    name: "Brake Adjustment",
-    icon: "cog",
-    description: "Professional brake calibration and pad replacement for safe stopping.",
-    features: [
-      "Brake pad inspection",
-      "Cable tension adjustment",
-      "Pad alignment",
-      "Lever reach adjustment",
-      "Safety test",
-    ],
-    popular: false,
-  },
-  {
-    id: "gear",
-    name: "Gear Tuning",
-    icon: "settings",
-    description: "Precise derailleur adjustment and cable tension for smooth shifting.",
-    features: [
-      "Front derailleur adjustment",
-      "Rear derailleur adjustment",
-      "Cable tension tuning",
-      "Limit screw setting",
-      "Shift testing",
-    ],
-    popular: false,
-  },
-  {
-    id: "chain",
-    name: "Chain Replacement",
-    icon: "cog",
-    description: "New chain installation with proper sizing and lubrication.",
-    features: [
-      "Chain wear measurement",
-      "New chain sizing",
-      "Installation",
-      "Lubrication",
-      "Drivetrain check",
-    ],
-    popular: false,
-  },
-  {
-    id: "tube",
-    name: "Tube/Tyre Repair",
-    icon: "bike",
-    description: "Puncture repair or tube replacement to get you rolling again.",
-    features: [
-      "Puncture location",
-      "Patch or tube replacement",
-      "Tyre inspection",
-      "Pressure adjustment",
-      "Rim check",
-    ],
-    popular: false,
-  },
-  {
-    id: "cable",
-    name: "Cable Replacement",
-    icon: "cog",
-    description: "Complete cable and housing replacement for smooth operation.",
-    features: [
-      "Brake cable replacement",
-      "Gear cable replacement",
-      "Housing inspection",
-      "Cable routing",
-      "Tension adjustment",
-    ],
-    popular: false,
-  },
-  {
-    id: "bottom-bracket",
-    name: "Bottom Bracket Service",
-    icon: "cog",
-    description: "Bottom bracket removal, cleaning, and reinstallation or replacement.",
-    features: [
-      "Removal and inspection",
-      "Deep cleaning",
-      "Grease application",
-      "Torque specification",
-      "Crank reinstallation",
-    ],
-    popular: false,
-  },
-  {
-    id: "emergency",
-    name: "Emergency Repair",
-    icon: "alerttriangle",
-    description: "Urgent repairs when you need them most. Quick turnaround guaranteed.",
-    features: [
-      "Priority service",
-      "Quick diagnosis",
-      "Same-day repair",
-      "Emergency parts",
-      "Mobile service available",
-    ],
-    popular: false,
-  },
-];
-
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
@@ -172,23 +40,14 @@ const stagger = {
 
 export default function ServicesPage() {
   const [showPopular, setShowPopular] = useState(false);
-  const [services, setServices] = useState<any[]>(defaultServices);
+  const [services, setServices] = useState<SanityService[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchServices() {
       try {
         const sanityServices = await getServices();
-        if (sanityServices && sanityServices.length > 0) {
-          setServices(sanityServices.map((s: SanityService) => ({
-            id: s._id,
-            name: s.name,
-            icon: s.icon || 'settings',
-            description: s.description,
-            features: s.features || [],
-            popular: s.popular || false,
-          })));
-        }
+        setServices(sanityServices);
       } catch (error) {
         console.error('Failed to fetch services from Sanity:', error);
       } finally {
@@ -267,11 +126,11 @@ export default function ServicesPage() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12">
             {displayedServices.map((service, index) => {
-              const Icon = iconMap[service.icon] || Settings;
+              const Icon = iconMap[service.icon || 'settings'] || Settings;
               return (
               <motion.div
-                key={service.id}
-                id={service.id}
+                key={service._id}
+                id={service._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -295,7 +154,7 @@ export default function ServicesPage() {
                   <p className="text-zinc-400 text-sm mb-4">{service.description}</p>
 
                   <ul className="space-y-2 mb-6">
-                    {service.features.map((feature) => (
+                    {(service.features || []).map((feature) => (
                       <li key={feature} className="flex items-center gap-2 text-sm text-zinc-300">
                         <CheckCircle2 className="w-4 h-4 text-[#22c55e] flex-shrink-0" />
                         {feature}

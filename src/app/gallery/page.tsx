@@ -20,99 +20,18 @@ import { getGalleryImages, type SanityGalleryImage } from "@/sanity/lib/gallery"
 
 const categories = ["All", "Repairs", "Custom Builds", "Before & After", "Shop", "Events"];
 
-const defaultImages = [
-  {
-    id: 1,
-    title: "Full Suspension Overhaul",
-    category: "Repairs",
-    description: "Complete suspension service on a mountain bike",
-    image: "/images/561564733_24980808734892635_6173447473608756971_n.jpg",
-  },
-  {
-    id: 2,
-    title: "Custom Road Bike Build",
-    category: "Custom Builds",
-    description: "Full carbon road bike build from frame up",
-    image: "/images/559126811_24980808588225983_7987722874900564762_n.jpg",
-  },
-  {
-    id: 3,
-    title: "Drivetrain Replacement",
-    category: "Repairs",
-    description: "New chain, cassette, and chainring installation",
-    image: "/images/545959328_24657224403917738_5108936384260146638_n.jpg",
-  },
-  {
-    id: 4,
-    title: "Vintage Restoration",
-    category: "Before & After",
-    description: "Classic steel frame restoration project",
-    image: "/images/545699099_24657224340584411_9202809481717145839_n.jpg",
-  },
-  {
-    id: 5,
-    title: "The Workshop",
-    category: "Shop",
-    description: "Our fully equipped service area",
-    image: "/images/565336339_24980784798228362_6401934621629016541_n.jpg",
-  },
-  {
-    id: 6,
-    title: "Mountain Bike Build",
-    category: "Custom Builds",
-    description: "Custom MTB build with premium components",
-    image: "/images/565163355_24980815818225260_5390923980163679501_n.jpg",
-  },
-  {
-    id: 7,
-    title: "Brake System Upgrade",
-    category: "Repairs",
-    description: "Hydraulic brake installation and bleeding",
-    image: "/images/545088905_24658028260504019_5541810624885367591_n.jpg",
-  },
-  {
-    id: 8,
-    title: "Race Day Support",
-    category: "Events",
-    description: "On-site mechanical support at local races",
-    image: "/images/sani2cServicePAck.jpg",
-  },
-  {
-    id: 9,
-    title: "Wheel Building",
-    category: "Repairs",
-    description: "Hand-built wheel with custom spokes",
-    image: "/images/546525045_24658028250504020_2286864481216630780_n.jpg",
-  },
-  {
-    id: 10,
-    title: "E-Bike Conversion",
-    category: "Custom Builds",
-    description: "Electric motor installation on commuter bike",
-    image: "/images/561564733_24980808734892635_6173447473608756971_n.jpg",
-  },
-];
-
 export default function GalleryPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [galleryImages, setGalleryImages] = useState<any[]>(defaultImages);
+  const [galleryImages, setGalleryImages] = useState<SanityGalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchGallery() {
       try {
         const images = await getGalleryImages();
-        if (images && images.length > 0) {
-          setGalleryImages(images.map((img: SanityGalleryImage) => ({
-            id: img._id,
-            title: img.title,
-            category: img.category,
-            description: img.description,
-            image: img.imageUrl || null,
-          })));
-        }
+        setGalleryImages(images);
       } catch (error) {
         console.error('Failed to fetch gallery from Sanity:', error);
       } finally {
@@ -207,7 +126,7 @@ export default function GalleryPage() {
             <AnimatePresence mode="popLayout">
               {filteredImages.map((image, index) => (
                 <motion.div
-                  key={image.id}
+                  key={image._id}
                   layout
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -219,10 +138,10 @@ export default function GalleryPage() {
                     onClick={() => openLightbox(index)}
                   >
                     <div className="aspect-square relative">
-                      {image.image ? (
+                      {image.imageUrl ? (
                         <img 
-                          src={image.image} 
-                          alt={image.title}
+                          src={image.imageUrl} 
+                          alt={image.title || ''}
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -275,10 +194,10 @@ export default function GalleryPage() {
 
               {/* Image */}
               <div className="aspect-video image-placeholder bg-zinc-900">
-                {filteredImages[currentImageIndex]?.image ? (
+                {filteredImages[currentImageIndex]?.imageUrl ? (
                   <img 
-                    src={filteredImages[currentImageIndex].image} 
-                    alt={filteredImages[currentImageIndex]?.title}
+                    src={filteredImages[currentImageIndex].imageUrl || ''} 
+                    alt={filteredImages[currentImageIndex]?.title || ''}
                     className="w-full h-full object-contain"
                   />
                 ) : (

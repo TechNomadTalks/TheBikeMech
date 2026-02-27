@@ -16,75 +16,6 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { getBlogPosts, type SanityBlogPost } from "@/sanity/lib/blog";
 
-const defaultPosts = [
-  {
-    id: 1,
-    slug: { current: "maintaining-your-bike-chain" },
-    title: "Maintaining Your Bike Chain: A Complete Guide",
-    excerpt: "Learn how to properly clean, lubricate, and maintain your bike chain for optimal performance and longevity. A well-maintained chain can last thousands of kilometers.",
-    category: "Maintenance Tips",
-    author: "The Bike Mech",
-    publishedAt: "2024-01-15",
-    readTime: "5 min read",
-    featured: true,
-  },
-  {
-    id: 2,
-    slug: { current: "when-to-replace-brake-pads" },
-    title: "When to Replace Your Brake Pads",
-    excerpt: "Knowing when to replace your brake pads is crucial for safety. This guide covers signs of wear, types of brake pads, and replacement intervals for different riding conditions.",
-    category: "Safety",
-    author: "The Bike Mech",
-    publishedAt: "2024-01-10",
-    readTime: "4 min read",
-    featured: false,
-  },
-  {
-    id: 3,
-    slug: { current: "winter-riding-tips" },
-    title: "Winter Riding Tips for South African Cyclists",
-    excerpt: "Don't let the cold stop you from riding! Here are our top tips for staying comfortable and safe during winter rides, including gear recommendations and maintenance advice.",
-    category: "Tips & Tricks",
-    author: "The Bike Mech",
-    publishedAt: "2024-01-05",
-    readTime: "6 min read",
-    featured: false,
-  },
-  {
-    id: 4,
-    slug: { current: "choosing-right-bike-size" },
-    title: "How to Choose the Right Bike Size",
-    excerpt: "Buying a new bike? Getting the right size is essential for comfort and performance. Learn how to measure yourself and find the perfect fit for any type of bike.",
-    category: "Buying Guides",
-    author: "The Bike Mech",
-    publishedAt: "2023-12-28",
-    readTime: "7 min read",
-    featured: false,
-  },
-  {
-    id: 5,
-    slug: { current: "tubeless-tyres-guide" },
-    title: "The Complete Guide to Tubeless Tyres",
-    excerpt: "Thinking about going tubeless? This comprehensive guide covers everything you need to know about tubeless tyres, including setup, maintenance, and troubleshooting common issues.",
-    category: "Technical",
-    author: "The Bike Mech",
-    publishedAt: "2023-12-20",
-    readTime: "8 min read",
-    featured: true,
-  },
-  {
-    id: 6,
-    slug: { current: "basic-bike-tools-every-cyclist-needs" },
-    title: "Basic Bike Tools Every Cyclist Should Own",
-    excerpt: "Be prepared for roadside repairs and basic maintenance with these essential tools. From multi-tools to floor pumps, here's what every cyclist should have in their toolkit.",
-    category: "Maintenance Tips",
-    author: "The Bike Mech",
-    publishedAt: "2023-12-15",
-    readTime: "5 min read",
-    featured: false,
-  },
-];
-
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
@@ -92,26 +23,14 @@ const fadeInUp = {
 
 export default function BlogPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [blogPosts, setBlogPosts] = useState<any[]>(defaultPosts);
+  const [blogPosts, setBlogPosts] = useState<SanityBlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchPosts() {
       try {
         const posts = await getBlogPosts();
-        if (posts && posts.length > 0) {
-          setBlogPosts(posts.map((p: SanityBlogPost) => ({
-            id: p._id,
-            slug: p.slug,
-            title: p.title,
-            excerpt: p.excerpt,
-            category: p.category,
-            author: p.author,
-            publishedAt: p.publishedAt,
-            readTime: p.readTime,
-            featured: p.featured,
-          })));
-        }
+        setBlogPosts(posts);
       } catch (error) {
         console.error('Failed to fetch blog posts from Sanity:', error);
       } finally {
@@ -121,7 +40,7 @@ export default function BlogPage() {
     fetchPosts();
   }, []);
 
-  const simpleSearch = (items: any[], term: string): any[] => {
+  const simpleSearch = (items: SanityBlogPost[], term: string): SanityBlogPost[] => {
     const lowerTerm = term.toLowerCase();
     return items.filter(item => 
       item.title?.toLowerCase().includes(lowerTerm) ||
@@ -135,7 +54,6 @@ export default function BlogPage() {
     : blogPosts;
 
   const featuredPosts = filteredPosts.filter((post) => post.featured);
-  const regularPosts = filteredPosts.filter((post) => !post.featured);
 
   return (
     <div className="py-12 px-4 lg:px-8">
@@ -182,7 +100,7 @@ export default function BlogPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {featuredPosts.map((post, index) => (
                 <motion.div
-                  key={post.id}
+                  key={post._id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
@@ -259,9 +177,9 @@ export default function BlogPage() {
           >
             <h2 className="text-xl font-semibold text-white mb-6">All Articles</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {blogPosts.map((post, index) => (
+              {filteredPosts.map((post, index) => (
               <motion.div
-                key={post.id}
+                key={post._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
