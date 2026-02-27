@@ -76,6 +76,12 @@ export function EventsCalendar() {
     return date.toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" });
   };
 
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setSelectedEvent(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -212,4 +218,112 @@ export function EventsCalendar() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mt-6 p-4 rounded-lg bg-white/5 border 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={handleBackdropClick}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-zinc-900 border border-white/10 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <Badge 
+                      variant={selectedEvent.type === "race" ? "default" : "secondary"}
+                      className="mb-2"
+                    >
+                      {selectedEvent.type === "race" ? "🏁 Race" : "🚴 Ride"}
+                    </Badge>
+                    <h2 className="text-2xl font-bold text-white">{selectedEvent.name}</h2>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSelectedEvent(null)}
+                    className="text-zinc-400 hover:text-white hover:bg-white/10"
+                  >
+                    ✕
+                  </Button>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Date */}
+                  <div className="flex items-center gap-3 text-zinc-300">
+                    <Calendar className="w-5 h-5 text-[#22c55e]" />
+                    <div>
+                      <p className="font-medium">{formatDate(selectedEvent.date)}</p>
+                      {selectedEvent.endDate && (
+                        <p className="text-sm text-zinc-500">to {formatDate(selectedEvent.endDate)}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Location */}
+                  {selectedEvent.location && (
+                    <div className="flex items-center gap-3 text-zinc-300">
+                      <MapPin className="w-5 h-5 text-[#22c55e]" />
+                      <p>{selectedEvent.location}</p>
+                    </div>
+                  )}
+
+                  {/* Entry Fee */}
+                  {selectedEvent.entryFee && (
+                    <div className="flex items-center gap-3 text-zinc-300">
+                      <DollarSign className="w-5 h-5 text-[#22c55e]" />
+                      <p>{selectedEvent.entryFee}</p>
+                    </div>
+                  )}
+
+                  {/* Distance */}
+                  {selectedEvent.distance && (
+                    <div className="flex items-center gap-3 text-zinc-300">
+                      <Route className="w-5 h-5 text-[#22c55e]" />
+                      <p>{selectedEvent.distance}</p>
+                    </div>
+                  )}
+
+                  {/* Categories */}
+                  {selectedEvent.categories && selectedEvent.categories.length > 0 && (
+                    <div className="flex items-start gap-3 text-zinc-300">
+                      <Trophy className="w-5 h-5 text-[#22c55e] mt-0.5" />
+                      <div className="flex flex-wrap gap-2">
+                        {selectedEvent.categories.map((category, index) => (
+                          <Badge key={index} variant="outline" className="border-white/20 text-zinc-300">
+                            {category}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Description */}
+                  {selectedEvent.description && (
+                    <div className="pt-2 border-t border-white/10">
+                      <h3 className="text-sm font-medium text-zinc-400 mb-2">About</h3>
+                      <p className="text-zinc-300 leading-relaxed">{selectedEvent.description}</p>
+                    </div>
+                  )}
+
+                  {/* Website Link */}
+                  {selectedEvent.website && (
+                    <a
+                      href={selectedEvent.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 w-full py-3 mt-4 rounded-lg bg-[#22c55e] hover:bg-[#22c55e]/90 text-black font-medium transition-colors"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Visit Event Website
+                    </a>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </Card>
+    </div>
+  );
+}
