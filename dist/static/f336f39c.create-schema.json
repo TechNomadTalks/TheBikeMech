@@ -1,0 +1,191 @@
+[
+  {
+    "fields": [
+      {
+        "name": "name",
+        "type": "string",
+        "title": "Service Name"
+      },
+      {
+        "name": "price",
+        "type": "number"
+      },
+      {
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "features",
+        "type": "array"
+      },
+      {
+        "initialValue": false,
+        "name": "popular",
+        "type": "boolean"
+      },
+      {
+        "initialValue": false,
+        "description": "Show \"From\" before price",
+        "name": "fromPrice",
+        "type": "boolean"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Settings",
+              "value": "settings"
+            },
+            {
+              "title": "Wrench",
+              "value": "wrench"
+            },
+            {
+              "title": "Cog",
+              "value": "cog"
+            },
+            {
+              "title": "Zap",
+              "value": "zap"
+            },
+            {
+              "title": "Bike",
+              "value": "bike"
+            }
+          ]
+        },
+        "name": "icon",
+        "type": "string"
+      }
+    ],
+    "name": "service",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "name": "excerpt",
+        "type": "text"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Maintenance Tips",
+              "value": "Maintenance Tips"
+            },
+            {
+              "title": "Safety",
+              "value": "Safety"
+            },
+            {
+              "title": "Tips & Tricks",
+              "value": "Tips & Tricks"
+            },
+            {
+              "title": "Buying Guides",
+              "value": "Buying Guides"
+            }
+          ]
+        },
+        "name": "category",
+        "type": "string"
+      },
+      {
+        "initialValue": "The Bike Mech",
+        "name": "author",
+        "type": "string"
+      },
+      {
+        "name": "publishedAt",
+        "type": "datetime"
+      },
+      {
+        "name": "readTime",
+        "type": "string"
+      },
+      {
+        "initialValue": false,
+        "name": "featured",
+        "type": "boolean"
+      }
+    ],
+    "name": "blogPost",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Repairs",
+              "value": "Repairs"
+            },
+            {
+              "title": "Custom Builds",
+              "value": "Custom Builds"
+            },
+            {
+              "title": "Before & After",
+              "value": "Before & After"
+            },
+            {
+              "title": "Shop",
+              "value": "Shop"
+            },
+            {
+              "title": "Events",
+              "value": "Events"
+            }
+          ]
+        },
+        "name": "category",
+        "type": "string"
+      },
+      {
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image"
+      }
+    ],
+    "name": "galleryImage",
+    "type": "document"
+  }
+]
