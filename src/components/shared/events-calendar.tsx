@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, ExternalLink, ChevronLeft, ChevronRight, DollarSign, Route, Trophy } from "lucide-react";
+import { Calendar, MapPin, ExternalLink, ChevronLeft, ChevronRight, DollarSign, Route, Trophy, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { events, getEventStatus, type BikeEvent } from "@/data/events";
+import { getEvents, type SanityEvent } from "@/sanity/lib/events";
 
 const months = [
   "January", "February", "March", "April", "May", "June",
@@ -15,7 +15,23 @@ const months = [
 
 export function EventsCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedEvent, setSelectedEvent] = useState<BikeEvent | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<SanityEvent | null>(null);
+  const [events, setEvents] = useState<SanityEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const data = await getEvents();
+        setEvents(data);
+      } catch (error) {
+        console.error('Failed to fetch events:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchEvents();
+  }, []);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -24,7 +40,7 @@ export function EventsCalendar() {
   const firstDayOfMonth = new Date(year, month, 1).getDay();
 
   const eventsByDate = useMemo(() => {
-    const map: Record<string, BikeEvent[]> = {};
+    const map: Record<string, SanityEvent[]> = {};
     events.forEach(event => {
       const eventDate = new Date(event.date);
       const key = `${eventDate.getFullYear()}-${eventDate.getMonth()}-${eventDate.getDate()}`;
@@ -32,7 +48,7 @@ export function EventsCalendar() {
       map[key].push(event);
     });
     return map;
-  }, []);
+  }, [events]);
 
   const upcomingEvents = useMemo(() => {
     const today = new Date();
@@ -40,7 +56,7 @@ export function EventsCalendar() {
       .filter(event => new Date(event.date) >= today)
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       .slice(0, 6);
-  }, []);
+  }, [events]);
 
   const prevMonth = () => {
     setCurrentDate(new Date(year, month - 1, 1));
@@ -60,13 +76,21 @@ export function EventsCalendar() {
     return date.toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" });
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-[#22c55e]" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 md:space-y-8">
       {/* Events Grid with Images */}
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
         {upcomingEvents.map((event, index) => (
           <motion.div
-            key={event.id}
+            key={event._id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
@@ -188,92 +212,4 @@ export function EventsCalendar() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mt-6 p-4 rounded-lg bg-white/5 border border-white/10"
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <Badge 
-                  variant={selectedEvent.type === "race" ? "default" : "secondary"}
-                  className="mb-2"
-                >
-                  {selectedEvent.type === "race" ? "Race" : "Ride"}
-                </Badge>
-                <h4 className="font-semibold text-white text-lg">{selectedEvent.name}</h4>
-                <p className="text-zinc-400 text-sm mt-1">{selectedEvent.description}</p>
-                
-                <div className="flex flex-wrap gap-4 mt-3 text-sm">
-                  <div className="flex items-center gap-1 text-zinc-300">
-                    <Calendar className="w-4 h-4" />
-                    {formatDate(selectedEvent.date)}
-                    {selectedEvent.endDate && ` - ${formatDate(selectedEvent.endDate)}`}
-                  </div>
-                  <div className="flex items-center gap-1 text-zinc-300">
-                    <MapPin className="w-4 h-4" />
-                    {selectedEvent.location}
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-4 mt-3 text-sm">
-                  {selectedEvent.entryFee && (
-                    <div className="flex items-center gap-1 text-[#22c55e]">
-                      <DollarSign className="w-4 h-4" />
-                      <span className="font-medium">{selectedEvent.entryFee}</span>
-                    </div>
-                  )}
-                  {selectedEvent.distance && (
-                    <div className="flex items-center gap-1 text-[#06b6d4]">
-                      <Route className="w-4 h-4" />
-                      <span className="font-medium">{selectedEvent.distance}</span>
-                    </div>
-                  )}
-                  {selectedEvent.categories && (
-                    <div className="flex items-center gap-1 text-[#f97316]">
-                      <Trophy className="w-4 h-4" />
-                      <span className="font-medium">{selectedEvent.categories}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setSelectedEvent(null)}
-                className="text-zinc-400 hover:text-white"
-              >
-                ✕
-              </Button>
-            </div>
-            <a
-              href={selectedEvent.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 mt-4 text-[#22c55e] hover:underline text-sm"
-            >
-              More Info <ExternalLink className="w-3 h-3" />
-            </a>
-          </motion.div>
-        )}
-      </Card>
-
-      {/* Legend */}
-      <div className="flex flex-wrap gap-4 text-sm text-zinc-400">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-[#22c55e]" />
-          <span>Race Event</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-[#06b6d4]" />
-          <span>Group Ride</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-red-500 text-xs font-bold">✕</span>
-          <span>Event Date</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full ring-1 ring-[#22c55e]" />
-          <span>Today</span>
-        </div>
-      </div>
-    </div>
-  );
-}
+            className="mt-6 p-4 rounded-lg bg-white/5 border 
